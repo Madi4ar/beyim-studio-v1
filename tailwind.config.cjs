@@ -7,7 +7,7 @@ module.exports = {
         brand: {
           DEFAULT: "#18999D",
           soft: "#E6F5F5",
-          dark: "#127478",
+          dark: "#0D7377",
         },
         ink: "#1C1D1F",
         muted: "#6C7075",

@@ -1,9 +1,9 @@
+@import url("./tokens.css");
+@import url("./base.css");
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-@import url("./tokens.css");
-@import url("./base.css");
 
 @layer base {
   html {
@@ -298,37 +298,28 @@
   .project-toast.is-leaving { animation-duration: 1ms; transform: none; }
 }
 
-/* Full-viewport prompt hero: layered pastel fields move as one continuous
-   surface, while the next section starts only after the 100vh boundary. */
+/* Reusable ambient system. Decorative glow layers own blur and motion;
+   text, inputs and controls stay on crisp compositor layers. */
+.ambient-home {
+  color: var(--ambient-text);
+  background: var(--ambient-canvas) !important;
+}
+.ambient-home .text-ink { color: var(--ambient-text) !important; }
+.ambient-home .text-muted { color: var(--ambient-muted) !important; }
+
 .home-lovable-hero {
   min-height: calc(100vh - 12px);
   margin: 12px 12px 0;
   border-bottom-left-radius: 58% 9vw;
   border-bottom-right-radius: 42% 12vw;
+  background-color: var(--ambient-soft);
   background:
-    radial-gradient(90% 100% at 8% 8%, rgba(79, 204, 204, 0.66) 0%, rgba(79, 204, 204, 0) 62%),
-    radial-gradient(82% 96% at 92% 10%, rgba(147, 230, 219, 0.72) 0%, rgba(147, 230, 219, 0) 62%),
-    radial-gradient(88% 94% at 12% 94%, rgba(109, 221, 230, 0.58) 0%, rgba(109, 221, 230, 0) 64%),
-    radial-gradient(88% 96% at 90% 94%, rgba(194, 245, 229, 0.82) 0%, rgba(194, 245, 229, 0) 66%),
-    linear-gradient(145deg, #e8fbfa 0%, #f2fffc 42%, #e7faf6 70%, #f7fffd 100%);
-  background-size: 132% 132%, 128% 128%, 132% 132%, 128% 128%, 100% 100%;
-  background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 0 0;
+    radial-gradient(92% 94% at 4% 4%, color-mix(in srgb, var(--ambient-mint) 58%, transparent) 0%, transparent 64%),
+    radial-gradient(82% 92% at 96% 8%, color-mix(in srgb, var(--ambient-blue) 32%, transparent) 0%, transparent 66%),
+    radial-gradient(86% 92% at 84% 92%, color-mix(in srgb, var(--ambient-violet) 24%, transparent) 0%, transparent 68%),
+    radial-gradient(94% 96% at 8% 94%, color-mix(in srgb, var(--ambient-aqua) 48%, transparent) 0%, transparent 66%),
+    linear-gradient(145deg, var(--ambient-soft) 0%, color-mix(in srgb, var(--ambient-soft) 58%, white) 52%, #F7FBFF 100%);
   box-shadow: inset 0 1px 0 rgba(255,255,255,0.62);
-  animation: home-lovable-flow 18s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
-}
-.home-lovable-hero::before {
-  content: "";
-  position: absolute;
-  z-index: 0;
-  inset: -26% -22%;
-  pointer-events: none;
-  background:
-    radial-gradient(circle at 32% 38%, rgba(255,255,255,0.74) 0%, rgba(255,255,255,0) 35%),
-    radial-gradient(circle at 68% 64%, rgba(24,153,157,0.28) 0%, rgba(24,153,157,0) 42%);
-  filter: blur(34px);
-  transform: translate3d(-4%, -3%, 0) rotate(-4deg) scale(1);
-  will-change: transform;
-  animation: home-lovable-drift 14s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
 }
 .home-lovable-hero::after {
   content: "";
@@ -337,19 +328,139 @@
   inset: auto 0 0;
   height: 24%;
   pointer-events: none;
-  background: linear-gradient(180deg, rgba(244,245,247,0), rgba(244,245,247,0.22) 100%);
+  background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--ambient-canvas) 18%, transparent));
+}
+.ambient-glow-layer {
+  position: absolute;
+  z-index: 0;
+  width: min(760px, 64vw);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  pointer-events: none;
+  filter: blur(46px);
+  opacity: 0.64;
+  will-change: transform, opacity;
+  transform: translate3d(0,0,0);
+}
+.ambient-glow-layer-a {
+  top: -34%;
+  left: -16%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ambient-mint) 78%, transparent) 0%, color-mix(in srgb, var(--ambient-brand) 36%, transparent) 44%, transparent 72%);
+  animation: ambient-drift-a 19s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
+}
+.ambient-glow-layer-b {
+  top: -22%;
+  right: -18%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ambient-blue) 56%, transparent) 0%, color-mix(in srgb, var(--ambient-violet) 34%, transparent) 45%, transparent 72%);
+  animation: ambient-drift-b 23s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
+}
+.ambient-glow-layer-c {
+  bottom: -46%;
+  left: 24%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--ambient-aqua) 64%, transparent) 0%, color-mix(in srgb, var(--ambient-violet) 22%, transparent) 48%, transparent 72%);
+  animation: ambient-drift-c 21s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
 }
 .home-prompt-card {
-  background: rgba(255,255,255,0.78) !important;
+  background: var(--ambient-surface) !important;
   backdrop-filter: blur(30px) saturate(125%);
-  box-shadow: 0 24px 70px -34px rgba(18,116,120,0.34) !important;
+  box-shadow: 0 24px 70px -34px var(--ambient-shadow) !important;
 }
-@keyframes home-lovable-flow {
-  from { background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 0 0; }
-  to { background-position: 18% 12%, 82% 16%, 14% 82%, 84% 78%, 0 0; }
+.ambient-generator {
+  position: relative;
+  isolation: isolate;
 }
-@keyframes home-lovable-drift {
-  to { transform: translate3d(5%, 4%, 0) rotate(5deg) scale(1.07); }
+.ambient-generator::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -14px;
+  border-radius: 24px;
+  pointer-events: none;
+  background: conic-gradient(from 205deg, var(--ambient-brand), var(--ambient-blue), var(--ambient-violet), var(--ambient-mint), var(--ambient-brand));
+  filter: blur(28px);
+  opacity: 0.22;
+  transform: scale(0.98);
+  transition: opacity 320ms var(--ease-out), transform 420ms var(--ease-out);
+}
+.ambient-generator:hover::before,
+.ambient-generator:focus-within::before {
+  opacity: 0.38;
+  transform: scale(1.015);
+}
+.ambient-prompt-input {
+  color: var(--ambient-text) !important;
+  background: var(--ambient-surface-strong) !important;
+  border-color: var(--ambient-line) !important;
+}
+.ambient-prompt-field {
+  border-radius: 14px;
+  transition: box-shadow 300ms var(--ease-out);
+}
+.ambient-prompt-field:hover,
+.ambient-prompt-field:focus-within {
+  box-shadow: 0 16px 44px -28px color-mix(in srgb, var(--ambient-blue) 58%, transparent), 0 10px 34px -26px color-mix(in srgb, var(--ambient-brand) 72%, transparent);
+}
+.ambient-generate-button {
+  border: 0 !important;
+  color: white !important;
+  background: linear-gradient(135deg, var(--ambient-deep), color-mix(in srgb, var(--ambient-deep) 72%, var(--ambient-brand)) 64%, var(--ambient-aqua)) !important;
+  box-shadow: 0 12px 28px -16px color-mix(in srgb, var(--ambient-brand) 70%, transparent);
+}
+.ambient-generate-button:hover {
+  filter: brightness(1.05) saturate(1.06) !important;
+  box-shadow: 0 16px 34px -16px color-mix(in srgb, var(--ambient-brand) 82%, transparent);
+}
+.ambient-tool-card {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: var(--ambient-surface-strong) !important;
+}
+.ambient-tool-card::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(145deg, color-mix(in srgb, var(--ambient-mint) 18%, transparent), color-mix(in srgb, var(--ambient-blue) 11%, transparent) 58%, color-mix(in srgb, var(--ambient-violet) 9%, transparent));
+  opacity: 0;
+  transition: opacity 220ms var(--ease-out);
+}
+@media (hover: hover) {
+  .ambient-tool-card:hover::before { opacity: 1; }
+}
+.ambient-scroll-cue {
+  min-width: 148px;
+  min-height: 44px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  color: color-mix(in srgb, var(--ambient-text) 68%, transparent);
+  background: color-mix(in srgb, var(--ambient-surface) 64%, transparent);
+  box-shadow: 0 8px 24px -18px var(--ambient-shadow);
+  transform: translate3d(-50%, 0, 0);
+  animation: ambient-scroll-cue 3.4s cubic-bezier(0.16, 1, 0.3, 1) infinite;
+}
+.ambient-scroll-cue:hover {
+  color: var(--ambient-text);
+  background: var(--ambient-surface);
+  animation-play-state: paused;
+}
+.home-quick-actions { scroll-margin-top: 24px; }
+
+@keyframes ambient-drift-a {
+  to { transform: translate3d(18%, 10%, 0) rotate(7deg) scale(1.08); opacity: 0.76; }
+}
+@keyframes ambient-drift-b {
+  to { transform: translate3d(-16%, 14%, 0) rotate(-8deg) scale(1.1); opacity: 0.54; }
+}
+@keyframes ambient-drift-c {
+  to { transform: translate3d(9%, -18%, 0) rotate(6deg) scale(1.06); opacity: 0.72; }
+}
+@keyframes ambient-scroll-cue {
+  0%, 100% { opacity: 0.64; transform: translate3d(-50%, -7px, 0); }
+  24% { opacity: 1; transform: translate3d(-50%, 0, 0); }
+  42% { transform: translate3d(-50%, -3px, 0); }
+  58%, 84% { opacity: 0.9; transform: translate3d(-50%, 0, 0); }
 }
 @media (max-width: 767px) {
   .home-lovable-hero {
@@ -358,10 +469,23 @@
     border-bottom-left-radius: 56% 11vw;
     border-bottom-right-radius: 44% 15vw;
   }
+  .ambient-glow-layer {
+    width: 78vw;
+    filter: blur(34px);
+    opacity: 0.42;
+  }
+  .ambient-generator::before { opacity: 0.16; filter: blur(22px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .home-lovable-hero,
-  .home-lovable-hero::before { animation: none; }
+  .ambient-glow-layer { animation: none; will-change: auto; }
+  .ambient-generator::before { transition-duration: 1ms; }
+  .ambient-scroll-cue { animation: none; transform: translate3d(-50%, 0, 0); }
+}
+@media (prefers-reduced-transparency: reduce) {
+  .home-prompt-card {
+    background: var(--ambient-surface-strong) !important;
+    backdrop-filter: none !important;
+  }
 }
 
 /* Exact visual compatibility layer for pages copied from /Desktop/new-proj.
@@ -375,7 +499,7 @@
   --source-border: #e7e7e7;
   --source-border-strong: #cfcfcf;
   --source-brand: #18999d;
-  --source-brand-dark: #127579;
+  --source-brand-dark: #0d7377;
   --source-brand-deep: #0e5f62;
   --source-brand-soft: #e6f5f5;
   background: var(--source-bg);
@@ -413,12 +537,34 @@
 .source-replica-shell > aside .nav-item-active { background: var(--source-brand-soft); color: var(--source-brand-dark); }
 
 .generation-workspace {
-  background: #f4f5f7;
+  background:
+    radial-gradient(70% 56% at 50% 46%, color-mix(in srgb, var(--ambient-mint) 13%, transparent), transparent 72%),
+    radial-gradient(54% 48% at 78% 18%, color-mix(in srgb, var(--ambient-blue) 9%, transparent), transparent 72%),
+    var(--ambient-canvas);
 }
 .generation-thinking-card {
-  background: linear-gradient(145deg, #fff 0%, #e6f5f5 100%) !important;
-  border-color: rgba(24,153,157,0.18) !important;
-  box-shadow: 0 12px 34px -22px rgba(20,22,25,0.28) !important;
+  position: relative;
+  isolation: isolate;
+  color: var(--ambient-text);
+  background: linear-gradient(145deg, var(--ambient-surface-strong), color-mix(in srgb, var(--ambient-soft) 72%, var(--ambient-surface-strong))) !important;
+  box-shadow: 0 18px 46px -28px var(--ambient-shadow) !important;
+}
+.ambient-generation-active::before {
+  content: "";
+  position: absolute;
+  z-index: -1;
+  inset: -12px;
+  border-radius: 22px;
+  pointer-events: none;
+  background: conic-gradient(from 190deg, var(--ambient-brand), var(--ambient-blue), var(--ambient-violet), var(--ambient-aqua), var(--ambient-brand));
+  filter: blur(24px);
+  opacity: 0.2;
+  transform: scale(0.98);
+  will-change: transform, opacity;
+  animation: ambient-generating-pulse 4.8s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
+}
+@keyframes ambient-generating-pulse {
+  to { opacity: 0.42; transform: scale(1.025) rotate(2deg); }
 }
 
 .source-page { background: var(--source-bg); min-height: 0; }
@@ -560,4 +706,76 @@
 
 @media (prefers-reduced-motion: reduce) {
   .source-enter { animation: none; }
+  .ambient-generation-active::before {
+    animation: none;
+    opacity: 0.28;
+    transform: none;
+    will-change: auto;
+  }
+}
+
+/* System dark theme. The same semantic ambient tokens are remapped rather
+   than mechanically inverting the light composition. */
+@media (prefers-color-scheme: dark) {
+  body {
+    color: var(--ambient-text);
+    background: var(--ambient-canvas);
+  }
+  .source-replica-shell {
+    --source-bg: #06161d;
+    --source-surface: #0b232c;
+    --source-ink: #f1fafa;
+    --source-soft: #aac4c6;
+    --source-faint: #7f9da0;
+    --source-border: rgba(96,225,210,0.16);
+    --source-border-strong: rgba(96,225,210,0.28);
+    --source-brand: #60e1d2;
+    --source-brand-dark: #8ceadd;
+    --source-brand-deep: #20c5be;
+    --source-brand-soft: rgba(32,197,190,0.13);
+  }
+  .source-replica-shell > aside {
+    background: rgba(6,22,29,0.9);
+    border-color: var(--source-border);
+  }
+  .source-replica-shell .text-ink { color: var(--source-ink); }
+  .source-replica-shell .text-muted { color: var(--source-soft); }
+  .source-replica-shell .text-brand-dark { color: var(--source-brand-dark); }
+  .source-replica-shell .bg-white { background-color: var(--source-surface); }
+  .source-replica-shell .border-line { border-color: var(--source-border); }
+  .source-replica-shell .card { background-color: var(--source-surface); }
+  .source-replica-shell .input {
+    color: var(--source-ink);
+    background-color: #0d2932;
+    border-color: var(--source-border);
+  }
+  .source-replica-shell .input::placeholder { color: var(--source-soft); }
+
+  .home-lovable-hero {
+    background-color: #071b23;
+    background:
+      radial-gradient(92% 94% at 4% 4%, color-mix(in srgb, var(--ambient-aqua) 31%, transparent) 0%, transparent 64%),
+      radial-gradient(82% 92% at 96% 8%, color-mix(in srgb, var(--ambient-blue) 28%, transparent) 0%, transparent 66%),
+      radial-gradient(86% 92% at 84% 92%, color-mix(in srgb, var(--ambient-violet) 25%, transparent) 0%, transparent 68%),
+      radial-gradient(94% 96% at 8% 94%, color-mix(in srgb, var(--ambient-brand) 29%, transparent) 0%, transparent 66%),
+      linear-gradient(145deg, #071b23 0%, #0a252d 50%, #0b1d2c 100%);
+    box-shadow: inset 0 1px 0 rgba(96,225,210,0.13);
+  }
+  .ambient-home .sheet-surface { border-top-color: rgba(255,255,255,0.12); }
+  .ambient-home .icon-tile,
+  .ambient-generation .icon-tile {
+    color: var(--ambient-mint);
+    background: rgba(32,197,190,0.12);
+    --tw-ring-color: rgba(96,225,210,0.18);
+  }
+  .ambient-generator .bg-white { background-color: var(--ambient-surface-strong); }
+  .ambient-generator .hover\:bg-bg:hover { background-color: rgba(96,225,210,0.1); }
+  .ambient-generation-side {
+    color: var(--ambient-text);
+    background: rgba(7,25,33,0.94) !important;
+    border-color: var(--ambient-line) !important;
+  }
+  .generation-thinking-card {
+    background: linear-gradient(145deg, rgba(13,41,50,0.96), rgba(10,34,43,0.94)) !important;
+  }
 }

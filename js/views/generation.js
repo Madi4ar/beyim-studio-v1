@@ -58,11 +58,11 @@ export function renderGeneration(root, { id }) {
 
   const chatCol = h("div", {
     class:
-      "w-full md:w-72 md:shrink-0 bg-white border-b md:border-b-0 md:border-r border-line p-5 flex flex-col gap-4 max-h-72 md:max-h-none md:h-screen md:sticky md:top-0 overflow-y-auto scrollbar-thin",
+      "ambient-generation-side w-full md:w-72 md:shrink-0 bg-white border-b md:border-b-0 md:border-r border-line p-5 flex flex-col gap-4 max-h-72 md:max-h-none md:h-screen md:sticky md:top-0 overflow-y-auto scrollbar-thin",
   });
   const mainCol = h("div", { class: "flex-1 flex flex-col items-center justify-center gap-6 px-5 md:px-6 py-8 md:py-10" });
   const mainWrap = h("div", { class: "generation-workspace flex-1 flex flex-col md:h-screen overflow-y-auto scrollbar-thin" }, [mainCol]);
-  const columns = h("div", { class: "flex flex-col md:flex-row flex-1 min-h-0" }, [chatCol, mainWrap]);
+  const columns = h("div", { class: "ambient-generation flex flex-col md:flex-row flex-1 min-h-0" }, [chatCol, mainWrap]);
 
   let msgIndex = 0;
   let completionHandled = false;
@@ -89,7 +89,7 @@ export function renderGeneration(root, { id }) {
     const material = activeMaterial();
     const readyCount = project.materials.filter((item) => item.status === "ready").length;
     rememberCurrentThought();
-    return h("div", { class: "card generation-thinking-card p-5 w-full max-w-md", "aria-live": "polite" }, [
+    return h("div", { class: "ambient-generation-active card generation-thinking-card p-5 w-full max-w-md", "aria-live": "polite" }, [
       h("div", { class: "flex items-start justify-between gap-3 mb-4" }, [
         h("div", { class: "min-w-0" }, [
           h("p", { class: "text-xs font-medium text-brand-dark flex items-center gap-1.5" }, [

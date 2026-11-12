@@ -11,8 +11,38 @@
   --color-paper: #F4F5F7; --color-paper-2: #FFFFFF; --color-paper-3: #E6F5F5;
   --color-ink: #1C1D1F; --color-ink-2: #3A3C40; --color-muted: #5B5F64;
   --color-rule: #D8DCE1;
-  --color-accent: #18999D; --color-accent-ink: #127478; --color-focus: #18999D;
+  --color-accent: #18999D; --color-accent-ink: #0D7377; --color-focus: #18999D;
+  /* Ambient spectrum: brand teal owns actions; blue and violet are atmosphere only. */
+  --ambient-brand: #18999D; --ambient-deep: #0D7377; --ambient-aqua: #20C5BE;
+  --ambient-mint: #60E1D2; --ambient-blue: #3B82F6; --ambient-violet: #8B5CF6;
+  --ambient-soft: #E6F5F5; --ambient-canvas: #F7FBFB; --ambient-surface: rgba(255,255,255,0.82);
+  --ambient-surface-strong: rgba(255,255,255,0.94); --ambient-text: #102B2D; --ambient-muted: #4F6668;
+  --ambient-line: rgba(13,115,119,0.14); --ambient-shadow: rgba(13,115,119,0.24);
   --font-display: "-apple-system", "system-ui", "Inter", ui-sans-serif, sans-serif; --font-body: "-apple-system", "system-ui", "Inter", ui-sans-serif, system-ui, sans-serif; --font-outlier: var(--font-body);
   --radius-card: 10px; --radius-pill: 999px; --rule-hair: 1px; --shadow-card: 0 1px 2px oklch(0% 0 0 / 0.05), 0 1px 1px oklch(0% 0 0 / 0.04);
   --tracking-display: -0.02em;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --ambient-canvas: #06161D;
+    --ambient-surface: rgba(9,31,40,0.82);
+    --ambient-surface-strong: rgba(12,38,47,0.94);
+    --ambient-text: #F1FAFA;
+    --ambient-muted: #AAC4C6;
+    --ambient-line: rgba(96,225,210,0.18);
+    --ambient-shadow: rgba(0,0,0,0.46);
+  }
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ambient-canvas: #06161D;
+  --ambient-surface: rgba(9,31,40,0.82);
+  --ambient-surface-strong: rgba(12,38,47,0.94);
+  --ambient-text: #F1FAFA;
+  --ambient-muted: #AAC4C6;
+  --ambient-line: rgba(96,225,210,0.18);
+  --ambient-shadow: rgba(0,0,0,0.46);
 }

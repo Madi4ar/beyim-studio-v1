@@ -113,11 +113,11 @@ export function renderHome(root) {
   let lang = "kz";
 
   const topicInput = h("textarea", {
-    class: "input !pl-12 !py-5 !text-base min-h-[120px] resize-none",
+    class: "input ambient-prompt-input !pl-12 !py-5 !text-base min-h-[120px] resize-none",
     placeholder: "Введите тему, учебную цель или вставьте текст...",
     oninput: (e) => (topic = e.target.value),
   });
-  const topicInputWrap = h("div", { class: "relative" }, [
+  const topicInputWrap = h("div", { class: "ambient-prompt-field relative" }, [
     h("span", { class: "absolute left-4 top-5 text-brand pointer-events-none", html: icon("sparkles", "w-5 h-5") }),
     topicInput,
   ]);
@@ -161,28 +161,39 @@ export function renderHome(root) {
     });
   }
 
-  const heroCard = h("div", { class: "home-prompt-card sheet-surface w-full rounded-2xl p-6 md:p-8 flex flex-col gap-5" }, [
+  const heroCard = h("div", { class: "ambient-generator home-prompt-card sheet-surface w-full rounded-2xl p-6 md:p-8 flex flex-col gap-5" }, [
       topicInputWrap,
       h("div", { class: "grid grid-cols-1 sm:grid-cols-3 gap-3" }, [subjectField, gradeField, langField]),
       h(
         "button",
-        { class: "btn-primary w-full md:w-auto md:self-center !px-8 !py-3 text-sm", onClick: submit },
+        { class: "ambient-generate-button btn-primary w-full md:w-auto md:self-center !px-8 !py-3 text-sm", onClick: submit },
         [h("span", { html: icon("sparkles", "w-4 h-4") }), "Создать материалы"]
       ),
   ]);
 
   const hero = h("section", { class: "home-lovable-hero relative isolate overflow-hidden px-5 py-16 flex items-center justify-center text-center" }, [
+    h("div", { class: "ambient-glow-layer ambient-glow-layer-a", "aria-hidden": "true" }),
+    h("div", { class: "ambient-glow-layer ambient-glow-layer-b", "aria-hidden": "true" }),
+    h("div", { class: "ambient-glow-layer ambient-glow-layer-c", "aria-hidden": "true" }),
     h("div", { class: "relative z-10 w-full max-w-3xl flex flex-col items-center gap-8 md:gap-10" }, [
       renderTypewriterHeading(pickHeroMessage()),
       heroCard,
     ]),
-    h("div", { class: "absolute z-10 bottom-5 left-1/2 -translate-x-1/2 text-[11px] font-medium text-ink/55 flex flex-col items-center gap-1.5", "aria-hidden": "true" }, [
+    h("button", {
+      type: "button",
+      class: "ambient-scroll-cue absolute z-10 bottom-5 left-1/2 text-[11px] font-medium flex flex-col items-center gap-1.5",
+      "aria-label": "Перейти к быстрым действиям",
+      onClick: () => {
+        const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+        document.getElementById("home-quick-actions")?.scrollIntoView({ behavior: reducedMotion ? "auto" : "smooth", block: "start" });
+      },
+    }, [
       h("span", {}, "Быстрые действия ниже"),
       h("span", { html: icon("chevronDown", "w-4 h-4") }),
     ]),
   ]);
 
-  const quickActions = h("div", { class: "flex flex-col gap-3" }, [
+  const quickActions = h("div", { id: "home-quick-actions", class: "home-quick-actions flex flex-col gap-3 scroll-mt-6" }, [
     h("p", { class: "text-sm font-medium text-muted" }, "Быстрые действия"),
     h(
       "div",
@@ -190,7 +201,7 @@ export function renderHome(root) {
       QUICK_ACTIONS.map((qa) =>
         h(
           "button",
-          { class: "pressable card p-4 flex flex-col items-center gap-2.5 text-center hover:shadow-pop transition-shadow", onClick: () => navigate("/create") },
+          { class: "ambient-tool-card pressable card p-4 flex flex-col items-center gap-2.5 text-center hover:shadow-pop transition-shadow", onClick: () => navigate("/create") },
           [h("span", { class: "icon-tile w-11 h-11 rounded-xl", html: icon(qa.icon, "w-5 h-5") }), h("span", { class: "text-xs font-medium text-ink" }, qa.label)]
         )
       )
@@ -207,7 +218,7 @@ export function renderHome(root) {
       : h("p", { class: "text-sm text-muted" }, "Пока нет материалов — создайте первый урок выше."),
   ]);
 
-  const content = h("div", { class: "flex-1 overflow-y-auto scrollbar-thin bg-bg" }, [
+  const content = h("div", { class: "ambient-home flex-1 overflow-y-auto scrollbar-thin bg-bg" }, [
     hero,
     h("div", { class: "max-w-4xl mx-auto px-5 md:px-8 py-12 flex flex-col gap-10" }, [quickActions, recent]),
   ]);

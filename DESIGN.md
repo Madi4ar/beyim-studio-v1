@@ -5,7 +5,7 @@ colors:
   brand:
     canonical: "#18999D"
   brand-dark:
-    canonical: "#127478"
+    canonical: "#0D7377"
   brand-soft:
     canonical: "#E6F5F5"
   ink:
@@ -18,12 +18,16 @@ colors:
     canonical: "#F4F5F7"
   surface:
     canonical: "#FFFFFF"
-  hero-teal:
-    canonical: "#4FCCCC"
-  hero-mint:
-    canonical: "#93E6DB"
-  hero-cyan:
-    canonical: "#6DDDE6"
+  aqua:
+    canonical: "#20C5BE"
+  mint:
+    canonical: "#60E1D2"
+  ambient-blue:
+    canonical: "#3B82F6"
+  ambient-violet:
+    canonical: "#8B5CF6"
+  dark-canvas:
+    canonical: "#06161D"
   success:
     canonical: "#1A7042"
   warning:
@@ -78,24 +82,26 @@ components:
 
 **Creative North Star: "The Sunlit Instrument"**
 
-Beyim Studio reads as one continuous, calm instrument: a stable white navigation rail anchors every route, near-white workspaces keep long teaching tasks legible, and the first home viewport becomes a soft animated pastel field. The headline and prompt form sit centered inside that full-height hero, while the working sections begin below it.
+Beyim Studio reads as one continuous, calm instrument: a stable navigation rail anchors every route, quiet workspaces keep long teaching tasks legible, and the first home viewport becomes a soft animated ambient field. The headline and prompt form sit centered inside that full-height hero, while the working sections begin below it.
 
 The home hero and its top inset occupy exactly the first `100vh`; “Быстрые действия” starts after that boundary. The field is separated from the navigation rail by a narrow gutter and ends in one broad asymmetric elliptical sweep rather than card-like rounded corners or a straight baseline.
 
 **Key Characteristics:**
-- White 84px navigation rail shared by every route, with no shell changes during navigation
+- Stable 84px navigation rail shared by every route, white in light mode and deep blue-teal in dark mode, with no shell changes during navigation
 - Elevation declares once per surface: flat cards use shadow alone, glass surfaces use their blur + inset highlight, never both a border and a shadow
 - System typography (Apple's own stack) with tracking and leading tuned per size, tightening as text grows
-- Teal as the single functional accent and the sole atmospheric hue, expressed through light turquoise and mint tones in the home hero
+- Teal as the single functional accent; blue and violet appear only as low-opacity atmospheric light
 - Spring-driven, interruptible motion underneath the material (see the apple-design skill's work in `js/utils/motion.js`) — the glass is static, the gestures that move it are not
 
 ## Colors
 
-A neutral workspace palette with teal for product actions, progress and AI activity. Light turquoise, mint and cyan tints form the animated home hero without introducing a second accent family.
+A neutral workspace palette with teal for product actions, progress and AI activity. Mint, soft blue and violet are atmospheric companions used in blurred ambient layers, never competing action colors. Red, orange and yellow remain semantic-only and never become primary accents.
 
 ### Primary
 - **Beyim Teal** (`#18999D`): the one committed accent — icons, active states, progress fill, the brand's single color statement. Reserved for small, accent-weight surfaces; never a large filled region.
-- **Beyim Teal Deep** (`#127478`): the accent darkened enough to carry white text at AA contrast (5.5:1). Used wherever the accent fills a surface that also carries text — primary buttons, the logo tile — rather than the lighter primary teal, which only clears AA for large text or graphical objects (3.45:1).
+- **Beyim Teal Deep** (`#0D7377`): the accent darkened enough to carry white text. Used at the start of primary action gradients and on compact filled surfaces.
+- **Aquamarine** (`#20C5BE`) and **Mint** (`#60E1D2`): the bright and light ends of the brand spectrum; used for glow, progress energy and hover light.
+- **Ambient Blue** (`#3B82F6`) and **Ambient Violet** (`#8B5CF6`): low-opacity light fields only. They never encode actions, selection or status.
 
 ### Neutral
 - **Instrument Ink** (`#1C1D1F`): primary text.
@@ -105,7 +111,11 @@ A neutral workspace palette with teal for product actions, progress and AI activ
 - **Surface White** (`#FFFFFF`): flat content cards, inputs.
 
 ### Named Rules
-**The Functional Accent Rule.** Teal is the only product hue used for controls, selection, progress, AI activity and the home atmosphere. The hero may vary its lightness from turquoise to mint, but not introduce unrelated accent hues. Semantic success, warning and danger colors remain contrast-safe and state-bound.
+**The Functional Accent Rule.** Teal is the only product hue used for controls, selection, progress and AI activity. Blue and violet are non-functional atmospheric light, restricted to ambient backgrounds and glow. Semantic success, warning and danger colors remain contrast-safe and state-bound.
+
+**Theme Composition.** Light mode uses a white/mint canvas with pale teal, blue and violet light. Dark mode remaps the same roles onto a deep blue-teal canvas (`#06161D`) with restrained luminous accents; it is composed independently rather than produced by inversion.
+
+**Motion Rule.** Ambient cycles run for 19–23 seconds and animate only transform and opacity on isolated decorative layers. Mobile reduces layer opacity and blur. `prefers-reduced-motion` freezes spatial drift while preserving all content and state cues.
 
 **The Declared-Once Rule.** A surface's elevation is signaled exactly one way: a flat card uses `shadow-card` alone (no border); a glass surface uses its blur + inset highlight (no separate border-all-around or stacked drop shadow). A border and a shadow on the same element is the "ghost card" defect and is never intentional in this system.
 
@@ -150,7 +160,7 @@ Two radius steps: `0.75rem` (12px) on controls — buttons, inputs, chips' recta
 
 ### Buttons
 - **Shape:** 12px radius (`rounded-xl`).
-- **Primary:** `brand-dark` fill, white text, `10px 16px` padding. Press feedback is instant (`:active` scale-down on pointer-down, not on release); hover darkens via `brightness-90` rather than swapping to the lighter brand teal, which would drop below AA.
+- **Primary:** a deep-teal → brand-teal → aquamarine gradient with white text and `10px 16px` padding. Press feedback is instant (`:active` scale-down on pointer-down, not on release); hover modestly increases luminance and shadow.
 - **Secondary:** light glass (`glass-surface`) rather than flat white — a frosted pane, not a bordered box.
 - **Ghost:** transparent, brand-soft tint on hover/press.
 
@@ -187,4 +197,4 @@ Three tiers — `glass-surface` (light, small floating elements), `chrome-surfac
 - **Don't** place a small uppercase label above a page headline as a decorative kicker — not even the product name. This was found twice in the incumbent code and removed both times; it does not come back.
 - **Don't** pair a border with a shadow on the same card-like element ("ghost card").
 - **Don't** use `placeholder:text-muted/70` or any dimmed-opacity variant of a text color that is already at the edge of AA contrast on its own.
-- **Don't** introduce a second accent hue. Status color (amber) stays the one confirmed exception, and only at a contrast-safe shade.
+- **Don't** use blue or violet as action colors; they are atmospheric light only. Status hues stay state-bound and never become the page palette.
