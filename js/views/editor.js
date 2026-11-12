@@ -7,6 +7,7 @@ import { getProject, upsertProject } from "../data/store.js";
 import { buildMaterialContent } from "../data/mockContent.js";
 import { exportMaterialToDocx } from "../utils/exportDocx.js";
 import { navigate } from "../router.js";
+import { showToast } from "../components/feedback.js";
 
 const AI_COMMANDS = ["Сделай проще", "Сделай сложнее", "Добавь примеры", "Переведи на казахский", "Сделай для 5 класса", "Добавь групповое задание", "Сократи до 30 минут"];
 
@@ -332,9 +333,10 @@ export function renderEditor(root, { id, materialKey }) {
           exportBtn.textContent = "Экспортируем...";
           try {
             await exportMaterialToDocx(project, material, content);
+            showToast({ tone: "success", title: "Материал экспортирован", message: `${material.label} сохранён в DOCX.` });
           } catch (err) {
             console.error("Export failed:", err);
-            alert("Не удалось экспортировать документ. Попробуйте ещё раз.");
+            showToast({ tone: "error", title: "Не удалось экспортировать", message: "Проверьте соединение и попробуйте ещё раз." });
           } finally {
             exportBtn.disabled = false;
             clear(exportBtn);
@@ -384,5 +386,5 @@ export function renderEditor(root, { id, materialKey }) {
 
   const columns = h("div", { class: "flex flex-col md:flex-row flex-1 min-h-0" }, [main, aiPanel]);
 
-  mount(root, renderShell(columns));
+  mount(root, renderShell(columns, { sourceReplica: true }));
 }

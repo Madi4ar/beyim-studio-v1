@@ -11,7 +11,7 @@ import { renderEditor } from "./views/editor.js";
 import { renderMyMaterials } from "./views/myMaterials.js";
 import { renderTemplates } from "./views/templates.js";
 import { renderLibrary } from "./views/library.js";
-import { renderLessonMode } from "./views/lessonMode.js";
+import { renderLessonSelect, renderLessonMode } from "./views/lessonMode.js";
 import { renderAnalytics } from "./views/analytics.js";
 import { renderSettings } from "./views/settings.js";
 
@@ -25,7 +25,8 @@ registerRoute("/editor/:id/:materialKey", (params) => renderEditor(root, params)
 registerRoute("/materials", () => renderMyMaterials(root));
 registerRoute("/templates", () => renderTemplates(root));
 registerRoute("/library", () => renderLibrary(root));
-registerRoute("/teach", () => renderLessonMode(root));
+registerRoute("/teach", () => renderLessonSelect(root));
+registerRoute("/teach/:id", (params) => renderLessonMode(root, params));
 registerRoute("/analytics", () => renderAnalytics(root));
 registerRoute("/settings", () => renderSettings(root));
 

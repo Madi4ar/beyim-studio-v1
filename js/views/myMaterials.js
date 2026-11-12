@@ -1,26 +1,40 @@
-// "Мои материалы" (spec sec. 15-16): all projects, ready or generating.
+// "Материалы" (spec sec. 15-16): all projects, ready or generating.
 
 import { h, icon, mount } from "../utils/dom.js";
-import { renderShell } from "../components/shell.js";
+import { sourcePage } from "../components/sourcePage.js";
 import { renderProjectCard } from "../components/projectCard.js";
 import { getProjects } from "../data/store.js";
 import { navigate } from "../router.js";
+import { renderAlert } from "../components/feedback.js";
 
 export function renderMyMaterials(root) {
   const projects = getProjects();
+  const generatingProjects = projects.filter((project) => project.status === "generating");
 
-  const header = h("div", { class: "flex items-center justify-between" }, [
-    h("h1", { class: "text-2xl font-semibold text-ink tracking-tight" }, "Мои материалы"),
-    h("button", { class: "btn-primary", onClick: () => navigate("/create") }, [h("span", { html: icon("plus", "w-4 h-4") }), "Новый проект"]),
+  const newProject = h("button", { class: "source-btn source-btn-primary source-btn-sm", onClick: () => navigate("/create") }, [
+    h("span", { html: icon("plus", "w-4 h-4") }),
+    "Новый проект",
   ]);
 
   const grid = projects.length
     ? h("div", { class: "grid md:grid-cols-2 lg:grid-cols-3 gap-4" }, projects.map(renderProjectCard))
     : h("div", { class: "card p-10 text-center text-muted" }, "Пока нет проектов. Начните с AI Create.");
 
-  const content = h("div", { class: "flex-1 overflow-y-auto scrollbar-thin" }, [
-    h("div", { class: "max-w-6xl mx-auto px-5 md:px-8 py-10 flex flex-col gap-6" }, [header, grid]),
-  ]);
+  const generationAlert = generatingProjects.length
+    ? renderAlert({
+        tone: "info",
+        title: "Материалы продолжают создаваться",
+        message: `${generatingProjects.length} проект(а) активно готовятся в фоне. Можно открыть прогресс и уже готовые части.`,
+        actions: [
+          h("button", { class: "source-btn source-btn-secondary source-btn-sm", onClick: () => navigate(`/generating/${generatingProjects[0].id}`) }, "Посмотреть прогресс"),
+        ],
+      })
+    : null;
 
-  mount(root, renderShell(content));
+  mount(root, sourcePage({
+    title: "Материалы",
+    subtitle: "Все созданные проекты и материалы",
+    actions: newProject,
+    body: h("div", { class: "source-enter flex flex-col gap-5" }, [generationAlert, grid]),
+  }));
 }

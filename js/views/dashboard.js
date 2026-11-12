@@ -6,6 +6,7 @@ import { renderMaterialCard } from "../components/materialCard.js";
 import { getProject } from "../data/store.js";
 import { exportProjectToDocx } from "../utils/exportDocx.js";
 import { navigate } from "../router.js";
+import { renderAlert, showToast } from "../components/feedback.js";
 
 export function renderDashboard(root, { id }) {
   const project = getProject(id);
@@ -21,7 +22,7 @@ export function renderDashboard(root, { id }) {
       h("div", { class: "flex items-center gap-2 text-xs text-muted mb-1" }, [
         h("button", { class: "flex items-center gap-1 hover:text-ink", onClick: () => navigate("/materials") }, [
           h("span", { html: icon("arrowLeft", "w-3.5 h-3.5") }),
-          "Мои материалы",
+          "Материалы",
         ]),
       ]),
       h("h1", { class: "text-2xl font-semibold text-ink" }, project.topic),
@@ -41,9 +42,10 @@ export function renderDashboard(root, { id }) {
           exportBtn.textContent = "Экспортируем...";
           try {
             await exportProjectToDocx(project);
+            showToast({ tone: "success", title: "Экспорт завершён", message: `Проект «${project.topic}» сохранён в DOCX.` });
           } catch (err) {
             console.error("Export failed:", err);
-            alert("Не удалось экспортировать документ. Попробуйте ещё раз.");
+            showToast({ tone: "error", title: "Не удалось экспортировать", message: "Проверьте соединение и попробуйте ещё раз." });
           } finally {
             exportBtn.disabled = false;
             clear(exportBtn);
@@ -52,14 +54,15 @@ export function renderDashboard(root, { id }) {
         });
         return exportBtn;
       })(),
-      h("button", { class: "btn-primary", onClick: () => navigate(`/teach`) }, [h("span", { html: icon("play", "w-4 h-4") }), "Провести урок"]),
+      h("button", { class: "btn-primary", onClick: () => navigate(`/teach/${project.id}`) }, [h("span", { html: icon("play", "w-4 h-4") }), "Провести урок"]),
     ]),
   ]);
 
-  const summary = h("p", { class: "text-sm text-brand-dark font-medium" }, [
-    h("span", { class: "inline-block -mt-0.5 mr-1", html: icon("check", "w-4 h-4 inline") }),
-    `Готово ${readyCount} материалов`,
-  ]);
+  const summary = renderAlert({
+    tone: "success",
+    title: `Комплект готов: ${readyCount} материалов`,
+    message: "Материалы сохранены в проекте. Их можно открыть, экспортировать или использовать в режиме урока.",
+  });
 
   const whyBtn = h(
     "button",
@@ -81,5 +84,5 @@ export function renderDashboard(root, { id }) {
     h("div", { class: "max-w-5xl mx-auto px-5 md:px-8 py-10 flex flex-col gap-6" }, [header, summary, whyBtn, whyAnswer, grid]),
   ]);
 
-  mount(root, renderShell(content));
+  mount(root, renderShell(content, { sourceReplica: true }));
 }

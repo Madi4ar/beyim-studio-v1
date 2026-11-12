@@ -1,166 +1,137 @@
-// Universal AI Create screen (spec sec. 7–8): topic/goal/text/file entry
-// point + optional generation parameters that never block the quick path.
+// AI Create copied from /Users/madiar/Desktop/new-proj and adapted to this SPA's data layer.
 
-import { h, icon, mount } from "../utils/dom.js";
-import { renderShell } from "../components/shell.js";
-import { renderSelectField } from "../components/selectField.js";
-import { openMaterialPickerModal } from "../components/materialPickerModal.js";
+import { h, icon, mount, clear } from "../utils/dom.js";
+import { sourcePage, sourceAutosaveBadge, sourceSelect } from "../components/sourcePage.js";
 import { createGeneratingProject } from "../data/generationEngine.js";
-import { SUBJECTS, GRADES } from "../data/curriculum.js";
+import { getClasses } from "../data/store.js";
 import { navigate } from "../router.js";
 
 const SOURCE_TABS = [
-  { key: "topic", label: "Тема", icon: "sparkles" },
-  { key: "text", label: "Текст", icon: "doc" },
-  { key: "file", label: "PDF / Word", icon: "folder" },
-  { key: "link", label: "Ссылка", icon: "link" },
+  { key: "topic", icon: "sparkles", label: "Тема" },
+  { key: "text", icon: "doc", label: "Текст" },
+  { key: "file", icon: "upload", label: "PDF / Word" },
+  { key: "link", icon: "link", label: "Ссылка" },
+  { key: "image", icon: "image", label: "Изображение" },
+  { key: "own", icon: "folder", label: "Мой материал" },
 ];
 
+const INTENTS = ["Объяснить", "Закрепить", "Повторить", "Проверить", "Развивать критическое мышление", "Подготовить к экзамену"];
+
 export function renderAiCreate(root) {
-  let activeTab = "topic";
-  let topic = "";
-  let subject = "";
-  let grade = "7";
-  let lang = "ru";
-  let goal = "";
-  let duration = 45;
-  let textbook = "";
-  let intent = "Объяснить";
+  let activeSource = "topic";
+  let activeIntent = null;
   let showMore = false;
+  let chosenFileName = "";
+  let topic = "";
+  const body = h("div", { class: "source-enter" });
 
-  const tabIconEl = h("span", { class: "absolute left-4 top-4 text-brand pointer-events-none", html: icon("sparkles", "w-5 h-5") });
-
-  const tabsWrap = h("div", { class: "flex gap-2 flex-wrap" });
-  SOURCE_TABS.forEach((tabDef) => {
-    const el = h("button", { class: tabDef.key === activeTab ? "chip-active" : "chip" }, [
-      h("span", { html: icon(tabDef.icon, "w-3.5 h-3.5") }),
-      tabDef.label,
-    ]);
-    el.addEventListener("click", () => {
-      activeTab = tabDef.key;
-      Array.from(tabsWrap.children).forEach((c, i) => (c.className = SOURCE_TABS[i].key === activeTab ? "chip-active" : "chip"));
-      tabIconEl.innerHTML = icon(tabDef.icon, "w-5 h-5");
-      inputArea.placeholder =
-        activeTab === "topic"
-          ? "Например: Казахское ханство, 7 класс, объяснить причины образования..."
-          : activeTab === "text"
-          ? "Вставьте текст, параграф учебника или источник..."
-          : activeTab === "file"
-          ? "Перетащите PDF/Word сюда или нажмите, чтобы выбрать файл (демо)"
-          : "Вставьте ссылку на статью, видео или материал";
+  function draw() {
+    clear(body);
+    const tabs = h("div", { class: "flex flex-wrap gap-2 mb-4" });
+    SOURCE_TABS.forEach((tab) => {
+      const button = h("button", { type: "button", class: `source-chip${activeSource === tab.key ? " is-selected" : ""}` }, [
+        h("span", { html: icon(tab.icon, "w-4 h-4") }), h("span", {}, tab.label),
+      ]);
+      button.addEventListener("click", () => { activeSource = tab.key; chosenFileName = ""; topic = ""; draw(); });
+      tabs.appendChild(button);
     });
-    tabsWrap.appendChild(el);
-  });
 
-  const inputArea = h("textarea", {
-    class: "input !pl-12 !text-base min-h-[140px] resize-none",
-    placeholder: "Например: Казахское ханство, 7 класс, объяснить причины образования...",
-    oninput: (e) => (topic = e.target.value),
-  });
-  const inputAreaWrap = h("div", { class: "relative" }, [tabIconEl, inputArea]);
-
-  subject = "История Казахстана";
-  const subjectField = renderSelectField({
-    icon: "book",
-    label: "Предмет",
-    value: subject,
-    options: SUBJECTS,
-    onChange: (v) => (subject = v),
-    allowCustom: true,
-    customPlaceholder: "Свой предмет...",
-  });
-  const gradeField = renderSelectField({
-    icon: "graduation",
-    label: "Класс",
-    value: `${grade} класс`,
-    options: GRADES,
-    onChange: (v) => (grade = v.replace(" класс", "")),
-    columns: 4,
-  });
-  const langField = renderSelectField({
-    icon: "globe",
-    label: "Язык",
-    value: "Русский",
-    options: ["Русский", "Қазақша"],
-    onChange: (v) => (lang = v === "Қазақша" ? "kz" : "ru"),
-  });
-
-  const requiredRow = h("div", { class: "grid grid-cols-1 md:grid-cols-3 gap-3" }, [subjectField, gradeField, langField]);
-
-  function withLeadingIcon(iconName, node) {
-    node.classList.add("!pl-10");
-    return h("div", { class: "relative" }, [
-      h("span", { class: "absolute left-3.5 top-1/2 -translate-y-1/2 text-muted pointer-events-none", html: icon(iconName, "w-4 h-4") }),
-      node,
-    ]);
-  }
-
-  const goalInput = h("input", { class: "input", placeholder: "Учебная цель (необязательно)", oninput: (e) => (goal = e.target.value) });
-  const durationInput = h("input", { class: "input", type: "number", placeholder: "Длительность урока (мин)", value: "45", oninput: (e) => (duration = e.target.value) });
-  const textbookInput = h("input", { class: "input", placeholder: "Учебник (автор, название — необязательно)", oninput: (e) => (textbook = e.target.value) });
-  const intentSelect = h(
-    "select",
-    { class: "select-native", onchange: (e) => (intent = e.target.value) },
-    ["Объяснить", "Закрепить", "Повторить", "Проверить", "Развивать критическое мышление", "Подготовить к экзамену"].map((v) => h("option", { value: v }, v))
-  );
-  const intentField = h("div", { class: "select-wrap" }, [
-    h("span", { class: "absolute left-3.5 top-1/2 -translate-y-1/2 text-muted pointer-events-none z-10", html: icon("wand", "w-4 h-4") }),
-    (() => {
-      intentSelect.classList.add("!pl-10");
-      return intentSelect;
-    })(),
-    h("span", { class: "select-chevron", html: icon("chevronDown", "w-4 h-4") }),
-  ]);
-
-  const moreWrap = h("div", { class: "grid grid-cols-1 md:grid-cols-2 gap-3 overflow-hidden transition-all", style: "max-height:0; opacity:0;" }, [
-    withLeadingIcon("target", goalInput),
-    withLeadingIcon("timer", durationInput),
-    withLeadingIcon("book", textbookInput),
-    h("div", {}, [h("p", { class: "text-xs text-muted mb-1.5" }, "Teacher Intent"), intentField]),
-  ]);
-
-  const moreToggle = h(
-    "button",
-    { class: "text-sm text-brand-dark font-medium self-start flex items-center gap-1" },
-    ["Дополнительные параметры", h("span", { html: icon("chevronRight", "w-4 h-4") })]
-  );
-  moreToggle.addEventListener("click", () => {
-    showMore = !showMore;
-    moreWrap.style.maxHeight = showMore ? "300px" : "0";
-    moreWrap.style.opacity = showMore ? "1" : "0";
-  });
-
-  function submit() {
-    if (!topic.trim()) {
-      inputArea.classList.add("ring-2", "ring-red-300");
-      inputArea.focus();
-      return;
+    const form = h("form", { class: "source-card p-5" });
+    if (activeSource === "topic" || activeSource === "text") {
+      const field = h("textarea", {
+        name: "topic", rows: "4", class: "w-full resize-none border-0 outline-none text-[16px] bg-transparent source-input-area",
+        placeholder: activeSource === "topic" ? "Тема урока или учебная цель..." : "Вставьте текст — AI поймёт тему и уровень сложности...",
+      });
+      field.value = topic;
+      field.addEventListener("input", (event) => (topic = event.target.value));
+      form.appendChild(field);
+    } else if (activeSource === "link") {
+      const field = h("input", { type: "url", name: "sourceUrl", class: "source-input w-full max-w-sm px-3 py-2 text-[14px]", placeholder: "https://..." });
+      field.value = topic;
+      field.addEventListener("input", (event) => (topic = event.target.value));
+      form.appendChild(h("div", { class: "flex flex-col items-center gap-3 py-8 text-center" }, [
+        h("span", { class: "source-soft", html: icon("link", "w-7 h-7") }),
+        h("div", { class: "text-[14px] source-soft" }, "Вставьте ссылку на статью, видео или сайт"), field,
+      ]));
+    } else if (activeSource === "own") {
+      const openMaterials = h("button", { type: "button", class: "source-btn source-btn-secondary source-btn-sm" }, "Открыть «Материалы»");
+      openMaterials.addEventListener("click", () => navigate("/materials"));
+      form.appendChild(h("div", { class: "flex flex-col items-center gap-3 py-8 text-center" }, [
+        h("span", { class: "source-soft", html: icon("folder", "w-7 h-7") }),
+        h("div", { class: "text-[14px] source-soft" }, "Выберите материал из раздела «Материалы» для адаптации"), openMaterials,
+      ]));
+    } else {
+      const fileName = h("span", { class: "text-[12.5px] source-soft" }, chosenFileName);
+      const input = h("input", { type: "file", class: "hidden", accept: activeSource === "file" ? ".pdf,.doc,.docx" : "image/*" });
+      input.addEventListener("change", () => { chosenFileName = input.files?.[0]?.name || ""; fileName.textContent = chosenFileName; });
+      const chooser = h("label", { class: "source-btn source-btn-secondary source-btn-sm cursor-pointer" }, ["Выбрать файл", input]);
+      form.appendChild(h("div", { class: "flex flex-col items-center gap-3 py-8 text-center" }, [
+        h("span", { class: "source-soft", html: icon(activeSource === "file" ? "upload" : "image", "w-7 h-7") }),
+        h("div", { class: "text-[14px] source-soft" }, activeSource === "file" ? "Перетащите PDF или Word, или выберите файл" : "Загрузите изображение — AI распознает текст и тему"),
+        chooser, fileName,
+      ]));
     }
-    openMaterialPickerModal({
-      onConfirm: (materialKeys) => {
-        const project = createGeneratingProject({ topic, subject, grade, lang, goal, duration, textbook, materialKeys });
-        navigate(`/generating/${project.id}`);
-      },
+
+    const params = h("div", { class: "pt-3 mt-1 border-t", style: "border-color:var(--source-border)" }, [
+      h("div", { class: "grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3" }, [
+        sourceSelect({ name: "subject", label: "Предмет", options: ["История Казахстана", "Алгебра", "Биология", "Русский язык", "Қазақ тілі", "Всемирная история"], selected: "История Казахстана" }),
+        sourceSelect({ name: "grade", label: "Класс", options: ["5", "6", "7", "8", "9", "10", "11"], selected: "7" }),
+        sourceSelect({ name: "language", label: "Язык", options: ["Қазақша", "Русский"], selected: "Қазақша" }),
+      ]),
+    ]);
+    const moreToggle = h("button", { type: "button", class: "text-[13px] flex items-center gap-1 mt-4 source-brand" }, [
+      h("span", { html: icon(showMore ? "chevronDown" : "chevronRight", "w-3.5 h-3.5") }),
+      showMore ? "Скрыть уточнения" : "Показать больше уточнений (необязательно)",
+    ]);
+    moreToggle.addEventListener("click", () => { showMore = !showMore; draw(); });
+    params.appendChild(moreToggle);
+    if (showMore) {
+      params.appendChild(h("div", { class: "grid grid-cols-1 sm:grid-cols-3 gap-3 mt-3" }, [
+        sourceSelect({ name: "duration", label: "Длительность урока", options: ["30 минут", "40 минут", "45 минут", "70 минут (сдвоенный)"], selected: "45 минут" }),
+        sourceSelect({ name: "difficulty", label: "Уровень сложности", options: ["Базовый", "Стандартный", "Повышенный"], selected: "Стандартный" }),
+        sourceSelect({ name: "style", label: "Стиль подачи", options: ["Академический", "Простой", "Для школьника", "Методический"], selected: "Методический" }),
+      ]));
+    }
+
+    const intents = h("div", { class: "flex flex-wrap gap-2" });
+    INTENTS.forEach((label) => {
+      const chip = h("button", { type: "button", class: `source-chip${activeIntent === label ? " is-selected" : ""}` }, label);
+      chip.addEventListener("click", () => { activeIntent = activeIntent === label ? null : label; draw(); });
+      intents.appendChild(chip);
     });
+    params.appendChild(h("div", { class: "mt-4" }, [h("div", { class: "text-[13px] font-medium mb-2 source-soft" }, "Цель на уроке"), intents]));
+    form.appendChild(params);
+
+    const classProfile = getClasses()[0];
+    form.appendChild(h("div", { class: "flex items-center justify-between mt-5 pt-4 border-t flex-wrap gap-3", style: "border-color:var(--source-border)" }, [
+      h("label", { class: "flex items-center gap-2 text-[13px] source-soft" }, [
+        h("span", { html: icon("users", "w-4 h-4") }),
+        `Профиль класса «${classProfile?.name || "7А"}» подключён — дифференциация предложится автоматически`,
+      ]),
+      h("button", { type: "submit", class: "source-btn source-btn-primary" }, [h("span", { html: icon("sparkles", "w-4 h-4") }), "Создать материалы"]),
+    ]));
+
+    form.addEventListener("submit", (event) => {
+      event.preventDefault();
+      if (activeSource === "own") return;
+      const fd = new FormData(form);
+      const rawTopic = topic.trim() || chosenFileName;
+      if (!rawTopic) { form.classList.add("ring-2", "ring-red-300"); return; }
+      const language = String(fd.get("language") || "Қазақша");
+      const project = createGeneratingProject({
+        topic: rawTopic,
+        subject: String(fd.get("subject") || "История Казахстана"),
+        grade: String(fd.get("grade") || "7"),
+        lang: language === "Қазақша" ? "kz" : "ru",
+        goal: activeIntent || "",
+        duration: parseInt(String(fd.get("duration") || "45"), 10) || 45,
+      });
+      navigate(`/generating/${project.id}`);
+    });
+
+    body.append(tabs, form);
   }
 
-  const card = h("div", { class: "card p-6 md:p-8 flex flex-col gap-5 max-w-3xl mx-auto" }, [
-    h("div", {}, [
-      h("h1", { class: "text-xl font-semibold text-ink tracking-tight" }, "AI Create"),
-      h("p", { class: "text-sm text-muted mt-1" }, "Начните с темы, цели, текста или загруженного источника — уточнения не обязательны."),
-    ]),
-    tabsWrap,
-    inputAreaWrap,
-    h("div", { class: "flex flex-col gap-2" }, [h("p", { class: "text-xs font-medium text-muted" }, "Обязательные параметры"), requiredRow]),
-    moreToggle,
-    moreWrap,
-    h("button", { class: "btn-primary self-center !px-8 !py-3 text-sm", onClick: submit }, [
-      h("span", { html: icon("sparkles", "w-4 h-4") }),
-      "Создать материалы",
-    ]),
-  ]);
-
-  const content = h("div", { class: "flex-1 overflow-y-auto scrollbar-thin" }, [h("div", { class: "px-5 md:px-10 py-10" }, [card])]);
-
-  mount(root, renderShell(content));
+  draw();
+  mount(root, sourcePage({ title: "AI Create", subtitle: "Начните с темы, цели, текста, файла или ссылки — остальное уточнения.", actions: sourceAutosaveBadge(), body }));
 }

@@ -15,9 +15,43 @@ const NAV_ITEMS = [
   { path: "/settings", icon: "settings", key: "navSettings" },
 ];
 
-export function renderSidebar() {
+export function renderSidebar(options = {}) {
   const path = currentPath();
   const base = path.split("/")[1] || "";
+
+  if (options.sourceReplica) {
+    const sourceItems = [
+      { path: "/", icon: "home2", label: "Главная" },
+      { path: "/create", icon: "sparkles", label: "AI Create" },
+      { path: "/materials", icon: "folder", label: "Материалы" },
+      { path: "/templates", icon: "layout", label: "Шаблоны" },
+      { path: "/library", icon: "library", label: "Библиотека" },
+      { path: "/teach", icon: "play", label: "Урок" },
+      { path: "/analytics", icon: "chart", label: "Аналитика" },
+      { path: "/settings", icon: "settings", label: "Настройки" },
+    ].map((item) => {
+      const active = (item.path.split("/")[1] || "") === base;
+      const node = h("div", { class: active ? "nav-item-active" : "nav-item", title: item.label }, [
+        h("span", { html: icon(item.icon, "w-5 h-5") }),
+        h("span", { class: "source-nav-label text-center leading-tight" }, item.label),
+      ]);
+      node.addEventListener("click", () => navigate(item.path));
+      return node;
+    });
+    const profile = h("div", { class: "nav-item", title: "Мадияр Шаширбеков" }, [
+      h("div", { class: "w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-medium bg-brand-soft text-brand-dark" }, "МШ"),
+    ]);
+    profile.addEventListener("click", () => navigate("/settings"));
+    const sourceLogo = h("button", { type: "button", class: "mb-6 rounded-2xl pressable", "aria-label": "На главную" }, [
+      h("img", { src: "./assets/beyim-studio-ai-mark.png", alt: "", class: "w-12 h-12 block object-contain" }),
+    ]);
+    sourceLogo.addEventListener("click", () => navigate("/"));
+    return h("aside", { class: "source-sidebar flex shrink-0 flex-col items-center h-screen sticky top-0 z-20" }, [
+      sourceLogo,
+      h("nav", { class: "flex flex-col gap-1 flex-1" }, sourceItems),
+      profile,
+    ]);
+  }
 
   const items = NAV_ITEMS.map((item) => {
     const itemBase = item.path.split("/")[1] || "";
@@ -30,7 +64,13 @@ export function renderSidebar() {
     return el;
   });
 
+  const logo = h("button", { type: "button", class: "mb-2 rounded-2xl pressable", "aria-label": "На главную" }, [
+    h("img", { src: "./assets/beyim-studio-ai-mark.png", alt: "", class: "w-12 h-12 block object-contain" }),
+  ]);
+  logo.addEventListener("click", () => navigate("/"));
+
   return h("aside", { class: "hidden md:flex w-20 shrink-0 chrome-surface border-r border-line flex-col items-center py-3 gap-1 h-screen sticky top-0 z-20" }, [
+    logo,
     h("nav", { class: "flex flex-col gap-1 w-full px-1.5" }, items),
   ]);
 }

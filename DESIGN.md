@@ -1,6 +1,6 @@
 ---
 name: Beyim Studio
-description: An AI lesson-prep tool for Kazakhstani teachers, rendered in Apple's Liquid Glass material language.
+description: An AI lesson-prep tool with stable light navigation, calm workspaces, and a full-viewport animated prompt hero.
 colors:
   brand:
     canonical: "#18999D"
@@ -18,6 +18,18 @@ colors:
     canonical: "#F4F5F7"
   surface:
     canonical: "#FFFFFF"
+  prompt-peach:
+    canonical: "#FFBE8F"
+  prompt-lavender:
+    canonical: "#AE91FF"
+  prompt-cyan:
+    canonical: "#75D5DF"
+  success:
+    canonical: "#1A7042"
+  warning:
+    canonical: "#7A4E12"
+  danger:
+    canonical: "#C23B3B"
 typography:
   display:
     fontFamily: "-apple-system, system-ui, Inter, ui-sans-serif, sans-serif"
@@ -64,22 +76,22 @@ components:
 
 ## Overview
 
-**Creative North Star: "The Frosted Instrument"**
+**Creative North Star: "The Sunlit Instrument"**
 
-Beyim Studio reads as a precise instrument a teacher trusts, built from panes of real glass rather than flat colored rectangles. Structural chrome — the side rail, the bottom tab bar, a sheet pulled up from the bottom — sits as a translucent, blurred layer above scrolling content, catching a bright highlight at its top edge the way a real pane would. Ordinary content stays plain and legible: flat white cards, shadow-only elevation, no competing borders. The system is restrained, not showy — glass is reserved for floating structural and transient chrome, never applied as decoration on static content, and the single brand teal rides through it as the one committed accent rather than a palette of its own.
+Beyim Studio reads as one continuous, calm instrument: a stable white navigation rail anchors every route, near-white workspaces keep long teaching tasks legible, and the first home viewport becomes a soft animated pastel field. The headline and prompt form sit centered inside that full-height hero, while the working sections begin below it.
 
-Confirmed visual rejection: the pulsing cyan glow blob that previously sat behind the home hero headline is gone — it read as a generic "AI SaaS" tell (gradient + glow in the same cyan family), not as this product's own material. The teal gradient banner itself stays; it is a genuine brand commitment, not a category default.
+The home hero occupies at least `100vh`; “Быстрые действия” starts after that boundary. A bottom fade joins the animated field to the neutral workspace without a hard seam.
 
 **Key Characteristics:**
-- Three-tier translucent material system (glass-surface / chrome-surface / sheet-surface), weighted by structural importance
+- White 84px navigation rail shared by every route, with no shell changes during navigation
 - Elevation declares once per surface: flat cards use shadow alone, glass surfaces use their blur + inset highlight, never both a border and a shadow
 - System typography (Apple's own stack) with tracking and leading tuned per size, tightening as text grows
-- A single committed accent (brand teal) on an otherwise neutral, cool-toned ground
+- Teal as the single functional accent; muted blue, peach, lavender and pink are confined to the home hero
 - Spring-driven, interruptible motion underneath the material (see the apple-design skill's work in `js/utils/motion.js`) — the glass is static, the gestures that move it are not
 
 ## Colors
 
-A restrained, neutral-plus-one-accent palette: a cool near-white ground lets translucent glass read as glass, with the Beyim teal doing all of the color work.
+A neutral workspace palette with teal for product actions, progress and AI activity. Muted blue, peach, lavender and pink appear only inside the animated home hero.
 
 ### Primary
 - **Beyim Teal** (`#18999D`): the one committed accent — icons, active states, progress fill, the brand's single color statement. Reserved for small, accent-weight surfaces; never a large filled region.
@@ -93,7 +105,7 @@ A restrained, neutral-plus-one-accent palette: a cool near-white ground lets tra
 - **Surface White** (`#FFFFFF`): flat content cards, inputs.
 
 ### Named Rules
-**The One Accent Rule.** The brand teal is the system's only hue. Status/semantic colors (amber for "needs support," a status badge) are the only confirmed exceptions, and even those use a contrast-safe shade (`amber-700`, not `amber-600`), never the lighter default.
+**The Functional Accent Rule.** Teal is the only product hue used for controls, selection, progress and AI activity. Blue, peach, lavender and pink are non-functional and confined to the animated home hero. Semantic success, warning and danger colors remain contrast-safe and state-bound.
 
 **The Declared-Once Rule.** A surface's elevation is signaled exactly one way: a flat card uses `shadow-card` alone (no border); a glass surface uses its blur + inset highlight (no separate border-all-around or stacked drop shadow). A border and a shadow on the same element is the "ghost card" defect and is never intentional in this system.
 
@@ -115,7 +127,7 @@ A restrained, neutral-plus-one-accent palette: a cool near-white ground lets tra
 
 ## Layout
 
-Two shells: a desktop left rail (80px, `chrome-surface`) with a flexible content column, collapsing to a translucent bottom tab bar under `md`. Content columns cap at `max-w-3xl` to `max-w-6xl` depending on density, centered with `px-5 md:px-8`. Grids (quick actions, material cards) run 2-up on mobile, up to 4-up on desktop. Spacing rhythm follows Tailwind's default scale; sections separate with `gap-6` to `gap-10`, more space above a heading than below it.
+One stable desktop shell: an 84px white rail with a flexible content column. Standard menu routes use a 1080px content cap and the same 20px header; focused workspaces such as generation and the editor may use the full remaining width without changing the rail. Grids run 2-up on mobile, up to 4-up on desktop.
 
 ## Elevation & Depth
 
@@ -158,7 +170,7 @@ Two radius steps: `0.75rem` (12px) on controls — buttons, inputs, chips' recta
 - **Placeholder:** full-strength `muted`, not a dimmed opacity variant — the dimmed version failed contrast review.
 
 ### Navigation
-- **Style:** icon + label, 11px functional text, instant press feedback. Active state: brand-soft fill, brand-dark text/icon. Desktop rail and mobile tab bar are both `chrome-surface` glass, sticky above scrolling content.
+- **Style:** icon + label, 11px functional text, instant press feedback. The desktop rail is white; inactive items use muted ink, while the active item receives a brand-soft field and brand-dark foreground.
 
 ### Glass Surfaces (signature component)
 Three tiers — `glass-surface` (light, small floating elements), `chrome-surface` (heavy, structural chrome), `sheet-surface` (medium-heavy, the modal/bottom sheet) — share one mechanism: `backdrop-filter: blur()` + `backdrop-saturate` over a translucent white fill, a bright `border-top` catching light at the pane's top edge, and the `glass`/`glass-sm` shadow tokens for lift. Under `prefers-reduced-transparency` or `prefers-contrast: more`, all three fall back to solid white with no blur — the material degrades to a plain surface, never to nothing.

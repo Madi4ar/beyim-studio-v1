@@ -10,16 +10,12 @@ import { createGeneratingProject } from "../data/generationEngine.js";
 import { SUBJECTS, GRADES } from "../data/curriculum.js";
 import { navigate } from "../router.js";
 
-// Vertical color stops for the hero banner (fixed px, matching h-[460px]).
-const HOME_GRADIENT_BASE =
-  "linear-gradient(180deg, #071A1B 0px, #0B2B2D 90px, #18999D 230px, #BFE7E6 380px, #FAFAFA 460px, #FAFAFA 100%)";
-
 // Types the headline out character by character, each letter fading in with
 // a natural, slightly varying cadence, finished off by a blinking caret.
 function renderTypewriterHeading(text, speed = 78) {
   const textEl = h("span", {});
-  const caret = h("span", { class: "inline-block w-[3px] md:w-[4px] h-[0.85em] bg-white ml-1 align-middle animate-caret-blink" });
-  const heading = h("h1", { class: "text-display text-3xl md:text-5xl font-semibold text-white max-w-2xl" }, [textEl, caret]);
+  const caret = h("span", { class: "inline-block w-[3px] md:w-[4px] h-[0.85em] bg-brand ml-1 align-middle animate-caret-blink" });
+  const heading = h("h1", { class: "text-display text-3xl md:text-5xl font-semibold text-ink max-w-2xl" }, [textEl, caret]);
 
   // Each word gets its own inline-block wrapper so the browser only ever
   // breaks the line at a space, never between two letters of one word.
@@ -122,22 +118,7 @@ export function renderHome(root) {
     });
   }
 
-  const banner = h(
-    "div",
-    {
-      // 460px must match the last stop in HOME_GRADIENT_BASE above.
-      class: "relative w-full h-[460px] flex flex-col items-center pt-16 gap-4 px-5 text-center overflow-hidden",
-      style: `background:${HOME_GRADIENT_BASE};`,
-    },
-    [
-      h("div", { class: "relative z-10 flex flex-col items-center gap-4" }, [
-        renderTypewriterHeading("Что будем создавать сегодня?"),
-      ]),
-    ]
-  );
-
-  const heroCard = h("div", { class: "relative z-10 -mt-20 md:-mt-24 max-w-3xl mx-auto px-5" }, [
-    h("div", { class: "sheet-surface rounded-2xl p-6 md:p-8 flex flex-col gap-5" }, [
+  const heroCard = h("div", { class: "home-prompt-card sheet-surface w-full rounded-2xl p-6 md:p-8 flex flex-col gap-5" }, [
       topicInputWrap,
       h("div", { class: "grid grid-cols-1 sm:grid-cols-3 gap-3" }, [subjectField, gradeField, langField]),
       h(
@@ -145,6 +126,16 @@ export function renderHome(root) {
         { class: "btn-primary w-full md:w-auto md:self-center !px-8 !py-3 text-sm", onClick: submit },
         [h("span", { html: icon("sparkles", "w-4 h-4") }), "Создать материалы"]
       ),
+  ]);
+
+  const hero = h("section", { class: "home-lovable-hero relative isolate min-h-screen w-full overflow-hidden px-5 py-16 flex items-center justify-center text-center" }, [
+    h("div", { class: "relative z-10 w-full max-w-3xl flex flex-col items-center gap-8 md:gap-10" }, [
+      renderTypewriterHeading("Что будем создавать сегодня?"),
+      heroCard,
+    ]),
+    h("div", { class: "absolute z-10 bottom-5 left-1/2 -translate-x-1/2 text-[11px] font-medium text-ink/55 flex flex-col items-center gap-1.5", "aria-hidden": "true" }, [
+      h("span", {}, "Быстрые действия ниже"),
+      h("span", { html: icon("chevronDown", "w-4 h-4") }),
     ]),
   ]);
 
@@ -174,10 +165,11 @@ export function renderHome(root) {
   ]);
 
   const content = h("div", { class: "flex-1 overflow-y-auto scrollbar-thin bg-bg" }, [
-    banner,
-    heroCard,
-    h("div", { class: "max-w-4xl mx-auto px-5 md:px-8 pt-10 pb-10 flex flex-col gap-10" }, [quickActions, recent]),
+    hero,
+    h("div", { class: "max-w-4xl mx-auto px-5 md:px-8 py-12 flex flex-col gap-10" }, [quickActions, recent]),
   ]);
 
-  mount(root, renderShell(content));
+  // Keep the home composition unique, but use the same 84px navigation rail
+  // as every other menu route so horizontal positions never jump on navigation.
+  mount(root, renderShell(content, { sourceReplica: true }));
 }

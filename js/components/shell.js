@@ -4,10 +4,12 @@
 import { h } from "../utils/dom.js";
 import { renderSidebar, renderMobileNav } from "./sidebar.js";
 
-export function renderShell(content) {
-  return h("div", { class: "flex flex-col md:flex-row min-h-screen bg-bg" }, [
-    renderSidebar(),
-    h("div", { class: "flex-1 flex flex-col min-w-0 pb-16 md:pb-0" }, [content]),
-    renderMobileNav(),
+export function renderShell(content, options = {}) {
+  const replicaClass = options.sourceReplica ? " source-replica-shell" : "";
+  const contentClass = options.sourceReplica ? "flex-1 flex flex-col min-w-0" : "flex-1 flex flex-col min-w-0 pb-16 md:pb-0";
+  return h("div", { class: `flex flex-col md:flex-row min-h-screen bg-bg${replicaClass}` }, [
+    renderSidebar(options),
+    h("div", { class: contentClass }, [content]),
+    options.sourceReplica ? null : renderMobileNav(),
   ]);
 }
