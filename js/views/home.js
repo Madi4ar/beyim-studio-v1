@@ -5,6 +5,7 @@ import { renderShell } from "../components/shell.js";
 import { renderProjectCard } from "../components/projectCard.js";
 import { renderSelectField } from "../components/selectField.js";
 import { openMaterialPickerModal } from "../components/materialPickerModal.js";
+import { AmbientGradient } from "../components/ambientGradient.js";
 import { getProjects } from "../data/store.js";
 import { createGeneratingProject } from "../data/generationEngine.js";
 import { SUBJECTS, GRADES } from "../data/curriculum.js";
@@ -172,12 +173,12 @@ export function renderHome(root) {
   ]);
 
   const hero = h("section", { class: "home-lovable-hero relative isolate overflow-hidden px-5 py-16 flex items-center justify-center text-center" }, [
-    h("div", { class: "ambient-glow-layer ambient-glow-layer-a", "aria-hidden": "true" }),
-    h("div", { class: "ambient-glow-layer ambient-glow-layer-b", "aria-hidden": "true" }),
-    h("div", { class: "ambient-glow-layer ambient-glow-layer-c", "aria-hidden": "true" }),
-    h("div", { class: "relative z-10 w-full max-w-3xl flex flex-col items-center gap-8 md:gap-10" }, [
-      renderTypewriterHeading(pickHeroMessage()),
-      heroCard,
+    h("div", { class: "home-hero-stage relative z-10 w-full flex items-center justify-center" }, [
+      AmbientGradient(),
+      h("div", { class: "relative z-10 w-full max-w-3xl flex flex-col items-center gap-8 md:gap-10" }, [
+        renderTypewriterHeading(pickHeroMessage()),
+        heroCard,
+      ]),
     ]),
     h("button", {
       type: "button",

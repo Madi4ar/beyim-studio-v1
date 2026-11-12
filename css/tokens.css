@@ -15,6 +15,7 @@
   /* Ambient spectrum: brand teal owns actions; blue and violet are atmosphere only. */
   --ambient-brand: #18999D; --ambient-deep: #0D7377; --ambient-aqua: #20C5BE;
   --ambient-mint: #60E1D2; --ambient-blue: #3B82F6; --ambient-violet: #8B5CF6;
+  --ambient-sky: #A6DAF7; --ambient-lavender: #C4B5FD;
   --ambient-soft: #E6F5F5; --ambient-canvas: #F7FBFB; --ambient-surface: rgba(255,255,255,0.82);
   --ambient-surface-strong: rgba(255,255,255,0.94); --ambient-text: #102B2D; --ambient-muted: #4F6668;
   --ambient-line: rgba(13,115,119,0.14); --ambient-shadow: rgba(13,115,119,0.24);

@@ -65,7 +65,7 @@ export function renderSidebar(options = {}) {
       h("img", { src: "./assets/beyim-studio-ai-mark.png", alt: "", class: "w-12 h-12 block object-contain" }),
     ]);
     sourceLogo.addEventListener("click", () => navigate("/"));
-    return h("aside", { class: "source-sidebar flex shrink-0 flex-col items-center h-screen sticky top-0 z-20" }, [
+    return h("aside", { class: "app-sidebar source-sidebar flex shrink-0 flex-col items-center h-screen sticky top-0 z-20" }, [
       sourceLogo,
       h("nav", { class: "flex flex-col gap-1 flex-1" }, sourceItems),
       renderThemeToggle("source-nav-label"),
@@ -89,7 +89,7 @@ export function renderSidebar(options = {}) {
   ]);
   logo.addEventListener("click", () => navigate("/"));
 
-  return h("aside", { class: "hidden md:flex w-20 shrink-0 chrome-surface border-r border-line flex-col items-center py-3 gap-1 h-screen sticky top-0 z-20" }, [
+  return h("aside", { class: "app-sidebar hidden md:flex w-20 shrink-0 chrome-surface border-r border-line flex-col items-center py-3 gap-1 h-screen sticky top-0 z-20" }, [
     logo,
     h("nav", { class: "flex flex-col gap-1 w-full px-1.5" }, items),
     renderThemeToggle(),
