@@ -18,12 +18,12 @@ colors:
     canonical: "#F4F5F7"
   surface:
     canonical: "#FFFFFF"
-  prompt-peach:
-    canonical: "#FFBE8F"
-  prompt-lavender:
-    canonical: "#AE91FF"
-  prompt-cyan:
-    canonical: "#75D5DF"
+  hero-teal:
+    canonical: "#4FCCCC"
+  hero-mint:
+    canonical: "#93E6DB"
+  hero-cyan:
+    canonical: "#6DDDE6"
   success:
     canonical: "#1A7042"
   warning:
@@ -86,12 +86,12 @@ The home hero occupies at least `100vh`; “Быстрые действия” s
 - White 84px navigation rail shared by every route, with no shell changes during navigation
 - Elevation declares once per surface: flat cards use shadow alone, glass surfaces use their blur + inset highlight, never both a border and a shadow
 - System typography (Apple's own stack) with tracking and leading tuned per size, tightening as text grows
-- Teal as the single functional accent; muted blue, peach, lavender and pink are confined to the home hero
+- Teal as the single functional accent and the sole atmospheric hue, expressed through light turquoise and mint tones in the home hero
 - Spring-driven, interruptible motion underneath the material (see the apple-design skill's work in `js/utils/motion.js`) — the glass is static, the gestures that move it are not
 
 ## Colors
 
-A neutral workspace palette with teal for product actions, progress and AI activity. Muted blue, peach, lavender and pink appear only inside the animated home hero.
+A neutral workspace palette with teal for product actions, progress and AI activity. Light turquoise, mint and cyan tints form the animated home hero without introducing a second accent family.
 
 ### Primary
 - **Beyim Teal** (`#18999D`): the one committed accent — icons, active states, progress fill, the brand's single color statement. Reserved for small, accent-weight surfaces; never a large filled region.
@@ -105,7 +105,7 @@ A neutral workspace palette with teal for product actions, progress and AI activ
 - **Surface White** (`#FFFFFF`): flat content cards, inputs.
 
 ### Named Rules
-**The Functional Accent Rule.** Teal is the only product hue used for controls, selection, progress and AI activity. Blue, peach, lavender and pink are non-functional and confined to the animated home hero. Semantic success, warning and danger colors remain contrast-safe and state-bound.
+**The Functional Accent Rule.** Teal is the only product hue used for controls, selection, progress, AI activity and the home atmosphere. The hero may vary its lightness from turquoise to mint, but not introduce unrelated accent hues. Semantic success, warning and danger colors remain contrast-safe and state-bound.
 
 **The Declared-Once Rule.** A surface's elevation is signaled exactly one way: a flat card uses `shadow-card` alone (no border); a glass surface uses its blur + inset highlight (no separate border-all-around or stacked drop shadow). A border and a shadow on the same element is the "ghost card" defect and is never intentional in this system.
 

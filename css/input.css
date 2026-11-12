@@ -302,11 +302,11 @@
    surface, while the next section starts only after the 100vh boundary. */
 .home-lovable-hero {
   background:
-    radial-gradient(90% 100% at 8% 8%, rgba(113,167,255,0.88) 0%, rgba(113,167,255,0) 62%),
-    radial-gradient(82% 96% at 92% 10%, rgba(181,145,255,0.78) 0%, rgba(181,145,255,0) 62%),
-    radial-gradient(88% 94% at 12% 94%, rgba(255,151,194,0.82) 0%, rgba(255,151,194,0) 64%),
-    radial-gradient(88% 96% at 90% 94%, rgba(255,181,125,0.88) 0%, rgba(255,181,125,0) 66%),
-    linear-gradient(145deg, #eaf2ff 0%, #f5e9ff 40%, #ffe8ef 68%, #fff0df 100%);
+    radial-gradient(90% 100% at 8% 8%, rgba(79, 204, 204, 0.66) 0%, rgba(79, 204, 204, 0) 62%),
+    radial-gradient(82% 96% at 92% 10%, rgba(147, 230, 219, 0.72) 0%, rgba(147, 230, 219, 0) 62%),
+    radial-gradient(88% 94% at 12% 94%, rgba(109, 221, 230, 0.58) 0%, rgba(109, 221, 230, 0) 64%),
+    radial-gradient(88% 96% at 90% 94%, rgba(194, 245, 229, 0.82) 0%, rgba(194, 245, 229, 0) 66%),
+    linear-gradient(145deg, #e8fbfa 0%, #f2fffc 42%, #e7faf6 70%, #f7fffd 100%);
   background-size: 132% 132%, 128% 128%, 132% 132%, 128% 128%, 100% 100%;
   background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 0 0;
   animation: home-lovable-flow 16s cubic-bezier(0.65, 0, 0.35, 1) infinite alternate;
@@ -323,7 +323,7 @@
 .home-prompt-card {
   background: rgba(255,255,255,0.78) !important;
   backdrop-filter: blur(30px) saturate(125%);
-  box-shadow: 0 24px 70px -34px rgba(48,41,66,0.38) !important;
+  box-shadow: 0 24px 70px -34px rgba(18,116,120,0.34) !important;
 }
 @keyframes home-lovable-flow {
   from { background-position: 0% 0%, 100% 0%, 0% 100%, 100% 100%, 0 0; }
