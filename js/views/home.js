@@ -189,7 +189,6 @@ export function renderHome(root) {
       },
     }, [
       h("span", {}, "Быстрые действия ниже"),
-      h("span", { html: icon("chevronDown", "w-4 h-4") }),
     ]),
   ]);
 
