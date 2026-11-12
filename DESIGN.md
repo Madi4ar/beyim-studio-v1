@@ -49,8 +49,6 @@ typography:
 rounded:
   control: "0.75rem"
   surface: "1rem"
-  hero: "2rem"
-  hero-mobile: "1.5rem"
   pill: "9999px"
 spacing:
   sm: "0.75rem"
@@ -82,7 +80,7 @@ components:
 
 Beyim Studio reads as one continuous, calm instrument: a stable white navigation rail anchors every route, near-white workspaces keep long teaching tasks legible, and the first home viewport becomes a soft animated pastel field. The headline and prompt form sit centered inside that full-height hero, while the working sections begin below it.
 
-The home hero and its top inset occupy exactly the first `100vh`; “Быстрые действия” starts after that boundary. The field is separated from the navigation rail by a narrow gutter and ends in a 32px rounded edge against the neutral workspace.
+The home hero and its top inset occupy exactly the first `100vh`; “Быстрые действия” starts after that boundary. The field is separated from the navigation rail by a narrow gutter and ends in one broad asymmetric elliptical sweep rather than card-like rounded corners or a straight baseline.
 
 **Key Characteristics:**
 - White 84px navigation rail shared by every route, with no shell changes during navigation

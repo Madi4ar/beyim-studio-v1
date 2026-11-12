@@ -9,6 +9,49 @@ import { getProjects } from "../data/store.js";
 import { createGeneratingProject } from "../data/generationEngine.js";
 import { SUBJECTS, GRADES } from "../data/curriculum.js";
 import { navigate } from "../router.js";
+import { getLang } from "../utils/i18n.js";
+
+const HERO_MESSAGES = {
+  ru: [
+    "Как вдохновим учеников сегодня?",
+    "Создадим урок, который изменит чей-то мир?",
+    "Какой мир откроем ученикам сегодня?",
+    "Давайте зажжём искру знаний!",
+    "Как удивим учеников сегодня?",
+    "Ваш следующий урок может изменить мир!",
+    "Создадим урок, который запомнится?",
+    "Большие открытия начинаются с вашего урока.",
+    "Что нового откроют ваши ученики сегодня?",
+    "Давайте вместе менять мир через знания!",
+  ],
+  kz: [
+    "Бүгін оқушыларды қалай шабыттандырамыз?",
+    "Біреудің өмірін өзгертер сабақ жасаймыз ба?",
+    "Бүгін оқушыларға қандай жаңа әлем ашамыз?",
+    "Білім ұшқынын бірге тұтатайық!",
+    "Бүгін оқушыларды қалай таңғалдырамыз?",
+    "Сіздің келесі сабағыңыз әлемді өзгертуі мүмкін!",
+    "Есте қаларлық сабақ жасаймыз ба?",
+    "Үлкен жаңалықтар сіздің сабағыңыздан басталады.",
+    "Бүгін оқушыларыңыз қандай жаңалық ашады?",
+    "Білім арқылы әлемді бірге өзгертейік!",
+  ],
+};
+
+function pickHeroMessage() {
+  const lang = getLang() === "kz" ? "kz" : "ru";
+  const messages = HERO_MESSAGES[lang];
+  const storageKey = `beyim_hero_message_${lang}`;
+  const previous = Number.parseInt(localStorage.getItem(storageKey) || "-1", 10);
+  let next = Math.floor(Math.random() * messages.length);
+
+  if (next === previous) {
+    next = (previous + 1 + Math.floor(Math.random() * (messages.length - 1))) % messages.length;
+  }
+
+  localStorage.setItem(storageKey, String(next));
+  return messages[next];
+}
 
 // Types the headline out character by character, each letter fading in with
 // a natural, slightly varying cadence, finished off by a blinking caret.
@@ -130,7 +173,7 @@ export function renderHome(root) {
 
   const hero = h("section", { class: "home-lovable-hero relative isolate overflow-hidden px-5 py-16 flex items-center justify-center text-center" }, [
     h("div", { class: "relative z-10 w-full max-w-3xl flex flex-col items-center gap-8 md:gap-10" }, [
-      renderTypewriterHeading("Что будем создавать сегодня?"),
+      renderTypewriterHeading(pickHeroMessage()),
       heroCard,
     ]),
     h("div", { class: "absolute z-10 bottom-5 left-1/2 -translate-x-1/2 text-[11px] font-medium text-ink/55 flex flex-col items-center gap-1.5", "aria-hidden": "true" }, [
