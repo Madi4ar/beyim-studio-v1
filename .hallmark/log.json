@@ -1,0 +1,29 @@
+[
+ {
+  "mode": "redesign",
+  "depth": "full",
+  "scope": "app",
+  "shape": "app screen",
+  "theme": "brand",
+  "axes": "light/grotesk-sans/chromatic-teal",
+  "hero": "settled",
+  "nav": "kept",
+  "footer": "kept",
+  "imagery": "none",
+  "photos": [],
+  "entry": "home.js hero card moved from translucent glass to an opaque hm-card system; kept brand teal + Beyim name + bilingual copy + all wiring",
+  "fingerprint": "beyim-home-hallmark-v1",
+  "sections": [
+   "banner",
+   "hero-card",
+   "quick-actions",
+   "recent-materials"
+  ],
+  "signature": "the topic composer card",
+  "waived": [
+   "39b: selectField.js trigger height, shared component out of scope"
+  ],
+  "prompt": "full Hallmark redesign of the Beyim Studio home page, brand kept",
+  "date": "2026-11-12"
+ }
+]

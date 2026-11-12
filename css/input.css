@@ -1,0 +1,229 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@import url("./tokens.css");
+@import url("./base.css");
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    @apply bg-bg text-ink font-sans;
+    font-optical-sizing: auto;
+  }
+}
+
+@layer components {
+  /*
+   * Response (§1 of the skill): every tappable surface gives feedback the
+   * instant a pointer goes down, not on release. :active covers mouse/pen
+   * immediately; touch-action removes the old ~300ms tap delay so touch
+   * gets the same instant feel. Scale settles back on release quickly and
+   * without overshoot — bounce is reserved for gesture/momentum
+   * interactions, see the drag sheet in the material picker modal.
+   */
+  .pressable {
+    @apply transition-transform duration-150 ease-out;
+    touch-action: manipulation;
+  }
+  .pressable:active {
+    transform: scale(0.97);
+    transition-duration: 60ms;
+  }
+
+  .btn {
+    @apply pressable inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-colors duration-150 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  /* bg-brand-dark, not bg-brand, carries white text at AA contrast (5.5:1 vs 3.5:1). */
+  .btn-primary {
+    @apply btn bg-brand-dark text-white hover:brightness-90;
+  }
+  .btn-secondary {
+    @apply btn glass-surface text-ink hover:bg-white/70;
+  }
+  .btn-ghost {
+    @apply btn bg-transparent text-muted hover:bg-brand-soft hover:text-brand;
+  }
+  /*
+   * Elevation declares once (craft floor): a plain content card is a flat
+   * opaque surface lifted by shadow alone — no competing border — so nested
+   * cards never read as a stacked "ghost card".
+   */
+  .card {
+    @apply bg-white rounded-2xl shadow-card;
+  }
+  /* placeholder:text-muted (not /70) keeps placeholder text at AA contrast (4.99:1 vs 2.8:1). */
+  .input {
+    @apply w-full rounded-xl border border-line bg-white px-4 py-2.5 text-sm text-ink placeholder:text-muted shadow-[inset_0_1px_1px_rgba(23,23,23,0.02)] transition-shadow duration-150 focus:outline-none focus:ring-4 focus:ring-brand/15 focus:border-brand;
+  }
+  .select-native {
+    @apply input appearance-none pr-10 cursor-pointer;
+  }
+  .select-wrap {
+    @apply relative;
+  }
+  .select-wrap > .select-chevron {
+    @apply pointer-events-none absolute right-3.5 top-1/2 -translate-y-1/2 text-muted;
+  }
+  .icon-tile {
+    @apply w-9 h-9 rounded-lg bg-brand-soft text-brand ring-1 ring-inset ring-brand/10 flex items-center justify-center shrink-0;
+  }
+  .chip {
+    @apply pressable inline-flex items-center gap-1.5 rounded-full border border-line bg-white px-3 py-1.5 text-xs font-medium text-ink hover:border-brand/40 hover:bg-brand-soft transition-colors cursor-pointer;
+  }
+  .chip-active {
+    @apply chip border-brand bg-brand-soft text-brand-dark;
+  }
+  .nav-item {
+    @apply pressable flex flex-col items-center gap-1 rounded-xl px-2 py-2.5 text-[11px] font-medium text-muted hover:bg-brand-soft hover:text-brand transition-colors cursor-pointer;
+  }
+  .nav-item-active {
+    @apply nav-item bg-brand-soft text-brand-dark;
+  }
+
+  /*
+   * Liquid Glass materials (apple-design §12, translated from Apple's iOS
+   * 26 Liquid Glass language): a translucent layer that blurs and tints
+   * whatever sits behind it, with a bright top edge where light would
+   * catch a real pane of glass — one `shadow-glass*` token supplies both
+   * that inset highlight and the ambient lift, so elevation still declares
+   * once. Weight signals hierarchy: chrome-surface (heavier, more opaque,
+   * more blur) separates structural regions — the side rail, the bottom
+   * tab bar; glass-surface (lighter) draws the eye to a floating
+   * interactive element — a dropdown panel, a secondary button;
+   * sheet-surface sits between the two for a blocking modal sheet.
+   * Content keeps scrolling underneath all three. Falls back to a solid
+   * surface under prefers-reduced-transparency / prefers-contrast below.
+   */
+  .glass-surface {
+    @apply bg-white/55 backdrop-blur-lg backdrop-saturate-150 shadow-glass-sm border-t border-white/70;
+  }
+  .chrome-surface {
+    @apply bg-white/75 backdrop-blur-xl backdrop-saturate-150 shadow-glass border-t border-white/80;
+  }
+  .sheet-surface {
+    @apply bg-white/85 backdrop-blur-2xl backdrop-saturate-150 shadow-glass border-t border-white/80;
+  }
+
+  /*
+   * Typography (§15): tracking and leading are size-specific, never one
+   * fixed value — tighten both as text gets larger. Apply the class that
+   * matches a heading's rendered size, not its semantic level.
+   */
+  .text-display {
+    letter-spacing: -0.025em;
+    line-height: 1.05;
+  }
+  .text-headline {
+    letter-spacing: -0.016em;
+    line-height: 1.15;
+  }
+  .text-title {
+    letter-spacing: -0.011em;
+    line-height: 1.3;
+  }
+  .text-eyebrow {
+    letter-spacing: 0.12em;
+    line-height: 1.4;
+  }
+}
+
+/* Reduced transparency (§14): frost the materials solid, drop the blur. */
+@media (prefers-reduced-transparency: reduce) {
+  .glass-surface,
+  .chrome-surface,
+  .sheet-surface {
+    background-color: #fff !important;
+    backdrop-filter: none !important;
+  }
+}
+
+/* Reduced contrast (§14): a defined, contrasting border instead of relying
+   on translucency/shadow alone to separate chrome from content. */
+@media (prefers-contrast: more) {
+  .glass-surface,
+  .chrome-surface,
+  .sheet-surface {
+    background-color: #fff !important;
+    backdrop-filter: none !important;
+    border-color: #1c1d1f !important;
+  }
+}
+
+.scrollbar-thin::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+.scrollbar-thin::-webkit-scrollbar-thumb {
+  background-color: #D7DBE0;
+  border-radius: 999px;
+}
+
+/*
+ * Browser surfaces (craft floor): the parts the page didn't explicitly
+ * draw still carry the design — selection and focus should read as this
+ * product, not an unstyled default.
+ */
+::selection {
+  background-color: rgba(24, 153, 157, 0.22);
+  color: #0f3f41;
+}
+:focus-visible {
+  outline: 2px solid #18999d;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-fade-in {
+  animation: fadeIn 0.25s ease-out;
+}
+
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.animate-pulse-dot {
+  animation: pulseDot 1.1s ease-in-out infinite;
+}
+
+@keyframes caretBlink {
+  0%, 49% { opacity: 1; }
+  50%, 100% { opacity: 0; }
+}
+.animate-caret-blink {
+  animation: caretBlink 1s steps(1) infinite;
+}
+
+@keyframes charFadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.animate-char-fade-in {
+  animation: charFadeIn 0.4s ease-out forwards;
+}
+
+/*
+ * Reduced motion (§14): never remove feedback entirely, just drop anything
+ * vestibular — motion, scaling, the slow-looping glow — down to a quiet
+ * opacity change. Comprehension-aiding color/opacity changes stay.
+ */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fade-in,
+  .animate-char-fade-in {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+  .animate-caret-blink {
+    animation: caretBlink 1.4s steps(1) infinite;
+  }
+  .pressable:active {
+    transform: none;
+  }
+}

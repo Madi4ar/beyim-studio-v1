@@ -1,0 +1,107 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-12T00:00:00Z",
+  "title": "Design System: Beyim Studio",
+  "extensions": {
+    "colorMeta": {
+      "brand": { "role": "primary", "displayName": "Beyim Teal", "canonical": "#18999D" },
+      "brand-dark": { "role": "primary", "displayName": "Beyim Teal Deep", "canonical": "#127478" },
+      "brand-soft": { "role": "primary", "displayName": "Beyim Teal Tint", "canonical": "#E6F5F5" },
+      "ink": { "role": "neutral", "displayName": "Instrument Ink", "canonical": "#1C1D1F" },
+      "muted": { "role": "neutral", "displayName": "Instrument Mist", "canonical": "#6C7075" },
+      "line": { "role": "neutral", "displayName": "Hairline", "canonical": "#E1E4E8" },
+      "bg": { "role": "neutral", "displayName": "Glass Ground", "canonical": "#F4F5F7" },
+      "surface": { "role": "neutral", "displayName": "Surface White", "canonical": "#FFFFFF" }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Home hero headline only." },
+      "title": { "displayName": "Title", "purpose": "Page titles and card headers." },
+      "body": { "displayName": "Body", "purpose": "Paragraph and label copy." }
+    },
+    "shadows": [
+      { "name": "card", "value": "0 1px 2px rgba(20,22,25,0.04), 0 1px 1px rgba(20,22,25,0.03)", "purpose": "Resting elevation for flat opaque content cards; no border." },
+      { "name": "pop", "value": "0 20px 40px -8px rgba(20,22,25,0.16), 0 2px 8px rgba(20,22,25,0.06)", "purpose": "Hover/active lift for an interactive card or opaque floating panel." },
+      { "name": "glass", "value": "0 1px 1px rgba(255,255,255,0.6) inset, 0 8px 28px -6px rgba(20,22,25,0.14)", "purpose": "Standard Liquid Glass material shadow: inner top highlight plus ambient lift. chrome-surface, sheet-surface." },
+      { "name": "glass-sm", "value": "0 1px 1px rgba(255,255,255,0.5) inset, 0 2px 10px -2px rgba(20,22,25,0.10)", "purpose": "Lighter glass weight for small floating elements. glass-surface." }
+    ],
+    "motion": [
+      { "name": "spring-default", "value": "damping 1.0, response 0.3-0.4", "purpose": "Critically damped default for UI materialize/dismiss (modal, dropdown panels)." },
+      { "name": "spring-momentum", "value": "damping 0.8-0.9, response 0.3-0.35", "purpose": "Under-damped spring for gesture release (drag-to-dismiss snap-back), carries the release velocity." },
+      { "name": "press-feedback", "value": "scale 0.97 on :active, 60ms", "purpose": "Instant pointer-down press feedback on every .pressable control." }
+    ],
+    "breakpoints": [
+      { "name": "md", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Default call-to-action button; brand-dark fill carries white text at AA contrast.",
+      "html": "<button class=\"ds-btn-primary\">Создать материалы</button>",
+      "css": ".ds-btn-primary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: #127478; color: #fff; border-radius: 12px; padding: 10px 16px; font-size: 14px; font-weight: 500; transition: filter 150ms, transform 150ms ease-out; } .ds-btn-primary:hover { filter: brightness(0.9); } .ds-btn-primary:active { transform: scale(0.97); transition-duration: 60ms; } .ds-btn-primary:focus-visible { outline: 2px solid #18999d; outline-offset: 2px; }"
+    },
+    {
+      "name": "Secondary Button (Glass)",
+      "kind": "button",
+      "refersTo": "button-secondary",
+      "description": "Frosted glass pane rather than a flat bordered box.",
+      "html": "<button class=\"ds-btn-secondary\">Отмена</button>",
+      "css": ".ds-btn-secondary { display: inline-flex; align-items: center; justify-content: center; gap: 8px; background: rgba(255,255,255,0.55); backdrop-filter: blur(16px) saturate(1.5); -webkit-backdrop-filter: blur(16px) saturate(1.5); border-top: 1px solid rgba(255,255,255,0.7); box-shadow: 0 1px 1px rgba(255,255,255,0.5) inset, 0 2px 10px -2px rgba(20,22,25,0.10); color: #1C1D1F; border-radius: 12px; padding: 10px 16px; font-size: 14px; font-weight: 500; transition: background 150ms, transform 150ms ease-out; } .ds-btn-secondary:hover { background: rgba(255,255,255,0.7); } .ds-btn-secondary:active { transform: scale(0.97); transition-duration: 60ms; }"
+    },
+    {
+      "name": "Content Card",
+      "kind": "card",
+      "refersTo": "card",
+      "description": "Flat opaque card, shadow-only elevation, no border (The Declared-Once Rule).",
+      "html": "<div class=\"ds-card\"><p class=\"ds-card-title\">Казахское ханство</p><p class=\"ds-card-meta\">История Казахстана · 7 класс</p></div>",
+      "css": ".ds-card { background: #fff; border-radius: 16px; box-shadow: 0 1px 2px rgba(20,22,25,0.04), 0 1px 1px rgba(20,22,25,0.03); padding: 16px; } .ds-card-title { color: #1C1D1F; font-weight: 600; } .ds-card-meta { color: #6C7075; font-size: 12px; margin-top: 4px; }"
+    },
+    {
+      "name": "Glass Rail (Navigation)",
+      "kind": "nav",
+      "refersTo": "chrome-surface",
+      "description": "Heavy-weight translucent glass for the primary structural navigation rail.",
+      "html": "<nav class=\"ds-rail\"><div class=\"ds-rail-item\">Главная</div></nav>",
+      "css": ".ds-rail { background: rgba(255,255,255,0.75); backdrop-filter: blur(24px) saturate(1.5); -webkit-backdrop-filter: blur(24px) saturate(1.5); border-top: 1px solid rgba(255,255,255,0.8); box-shadow: 0 1px 1px rgba(255,255,255,0.6) inset, 0 8px 28px -6px rgba(20,22,25,0.14); } .ds-rail-item { color: #6C7075; font-size: 11px; font-weight: 500; padding: 10px 8px; border-radius: 12px; } .ds-rail-item:hover { background: #E6F5F5; color: #18999D; }"
+    },
+    {
+      "name": "Modal Sheet",
+      "kind": "custom",
+      "refersTo": "sheet-surface",
+      "description": "Drag-to-dismiss glass sheet; materializes/dismisses along the same path, grab handle at top.",
+      "html": "<div class=\"ds-sheet\"><div class=\"ds-sheet-handle\"></div><p class=\"ds-sheet-title\">Какие материалы создать?</p></div>",
+      "css": ".ds-sheet { background: rgba(255,255,255,0.85); backdrop-filter: blur(32px) saturate(1.5); -webkit-backdrop-filter: blur(32px) saturate(1.5); border-top: 1px solid rgba(255,255,255,0.8); box-shadow: 0 1px 1px rgba(255,255,255,0.6) inset, 0 8px 28px -6px rgba(20,22,25,0.14); border-radius: 16px; padding: 24px 24px 24px; } .ds-sheet-handle { width: 40px; height: 6px; border-radius: 9999px; background: rgba(28,29,31,0.2); margin: 0 auto 8px; } .ds-sheet-title { color: #1C1D1F; font-weight: 600; font-size: 18px; letter-spacing: -0.011em; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Frosted Instrument",
+    "overview": "Beyim Studio reads as a precise instrument a teacher trusts, built from panes of real glass rather than flat colored rectangles. Structural chrome sits as a translucent, blurred layer above scrolling content, catching a bright highlight at its top edge the way a real pane would. Ordinary content stays plain and legible: flat white cards, shadow-only elevation, no competing borders. Glass is reserved for floating structural and transient chrome, never applied as decoration on static content, and the single brand teal rides through it as the one committed accent.",
+    "keyCharacteristics": [
+      "Three-tier translucent material system (glass-surface / chrome-surface / sheet-surface), weighted by structural importance",
+      "Elevation declares once per surface: shadow-only for flat cards, blur+highlight for glass",
+      "System typography with tracking/leading tuned per size",
+      "A single committed accent (brand teal) on a neutral, cool-toned ground",
+      "Spring-driven, interruptible motion underneath the material"
+    ],
+    "rules": [
+      { "name": "The One Accent Rule", "body": "The brand teal is the system's only hue; status color (amber) is the one confirmed exception, at a contrast-safe shade.", "section": "colors" },
+      { "name": "The Declared-Once Rule", "body": "A surface's elevation is signaled exactly one way: shadow alone for flat cards, blur+highlight alone for glass. Border and shadow together is the ghost-card defect.", "section": "elevation" },
+      { "name": "The No-Kicker Rule", "body": "No small uppercase label sits above a headline as a decorative eyebrow, not even the product name.", "section": "typography" },
+      { "name": "The Weight-Encodes-Hierarchy Rule", "body": "Heavier, more opaque, more blurred glass marks structural chrome the user always has; lighter glass marks a transient, interactive floating element. Never the reverse.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do use brand-dark, never brand, anywhere the accent fills a surface that also carries text.",
+      "Do keep functional text at an 11px floor and body copy at 12px or above.",
+      "Do reserve the glass tokens for floating structural or transient chrome, never static content.",
+      "Do let a card's elevation come from exactly one source."
+    ],
+    "donts": [
+      "Don't place a small uppercase label above a page headline as a decorative kicker.",
+      "Don't pair a border with a shadow on the same card-like element.",
+      "Don't use placeholder:text-muted/70 or any dimmed-opacity variant of a color already at the edge of AA contrast.",
+      "Don't introduce a second accent hue."
+    ]
+  }
+}
