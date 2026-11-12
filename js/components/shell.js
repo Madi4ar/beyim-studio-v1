@@ -1,8 +1,8 @@
-// Shared page shell: desktop left rail + mobile bottom tab bar, used by
+// Shared page shell: desktop left rail + mobile burger navigation, used by
 // every "simple" view (sidebar + single content column).
 
 import { h } from "../utils/dom.js";
-import { renderSidebar, renderMobileNav } from "./sidebar.js";
+import { renderSidebar, renderMobileHeader } from "./sidebar.js";
 
 export function renderShell(content, options = {}) {
   const replicaClass = options.sourceReplica ? " source-replica-shell" : "";
@@ -10,6 +10,6 @@ export function renderShell(content, options = {}) {
   return h("div", { class: `flex flex-col md:flex-row min-h-screen bg-bg${replicaClass}` }, [
     renderSidebar(options),
     h("div", { class: contentClass }, [content]),
-    renderMobileNav(),
+    renderMobileHeader(),
   ]);
 }

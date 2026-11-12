@@ -16,16 +16,16 @@ const NAV_ITEMS = [
   { path: "/settings", icon: "settings", key: "navSettings" },
 ];
 
-function renderThemeToggle(labelClass = "") {
+function renderThemeToggle(labelClass = "", buttonClass = "theme-toggle nav-item") {
   const iconWrap = h("span");
   const label = h("span", { class: `${labelClass} text-center leading-tight`.trim() });
-  const button = h("button", { type: "button", class: "theme-toggle nav-item", "aria-label": "Переключить цветовую тему" }, [iconWrap, label]);
+  const button = h("button", { type: "button", class: buttonClass, "aria-label": t("themeToggle") }, [iconWrap, label]);
 
   function refresh(theme = getTheme()) {
     const dark = theme === "dark";
     iconWrap.innerHTML = icon(dark ? "sun" : "moon", "w-5 h-5");
-    label.textContent = dark ? "Light" : "Dark";
-    button.title = dark ? "Включить светлую тему" : "Включить тёмную тему";
+    label.textContent = dark ? t("themeLight") : t("themeDark");
+    button.title = dark ? t("themeEnableLight") : t("themeEnableDark");
     button.setAttribute("aria-pressed", String(dark));
   }
 
@@ -96,12 +96,26 @@ export function renderSidebar(options = {}) {
   ]);
 }
 
-// Bottom tab bar shown on phones/tablets instead of the left rail.
-export function renderMobileNav() {
+// Compact header + modal drawer shown on phones instead of the left rail.
+export function renderMobileHeader() {
   const path = currentPath();
   const routeBase = path.split("/")[1] || "";
   const base = routeBase === "lesson" ? "teach" : routeBase;
-  let activeItem = null;
+
+  const menuButton = h("button", {
+    type: "button",
+    class: "mobile-menu-trigger pressable",
+    "aria-label": t("navOpen"),
+    "aria-expanded": "false",
+    "aria-controls": "mobile-menu-panel",
+    html: icon("menu", "w-6 h-6"),
+  });
+  const closeButton = h("button", {
+    type: "button",
+    class: "mobile-menu-close pressable",
+    "aria-label": t("navClose"),
+    html: icon("x", "w-5 h-5"),
+  });
 
   const items = NAV_ITEMS.map((item) => {
     const itemBase = item.path.split("/")[1] || "";
@@ -110,23 +124,98 @@ export function renderMobileNav() {
       "button",
       {
         type: "button",
-        class: `pressable flex flex-col items-center justify-center gap-0.5 py-2 px-3 min-w-[68px] min-h-[52px] shrink-0 text-[10px] font-medium ${active ? "text-brand" : "text-muted"}`,
+        class: `mobile-menu-item pressable${active ? " is-active" : ""}`,
         "aria-current": active ? "page" : null,
-        "aria-label": t(item.key),
       },
-      [h("span", { html: icon(item.icon, "w-5 h-5") }), h("span", { class: "whitespace-nowrap" }, t(item.key))]
+      [h("span", { class: "mobile-menu-item-icon", html: icon(item.icon, "w-5 h-5") }), h("span", {}, t(item.key))]
     );
-    if (active) activeItem = el;
-    el.addEventListener("click", () => navigate(item.path));
+    el.addEventListener("click", () => {
+      closeMenu(false);
+      navigate(item.path);
+    });
     return el;
   });
 
-  const nav = h("nav", {
-    class: "mobile-bottom-nav md:hidden fixed bottom-0 inset-x-0 z-30 chrome-surface flex overflow-x-auto scrollbar-thin",
+  const panel = h("aside", {
+    id: "mobile-menu-panel",
+    class: "mobile-menu-panel",
+    role: "dialog",
+    "aria-modal": "true",
     "aria-label": t("navPrimary"),
-  }, items);
-  if (window.matchMedia("(max-width: 767px)").matches) {
-    requestAnimationFrame(() => activeItem?.scrollIntoView({ block: "nearest", inline: "center" }));
+    tabindex: "-1",
+  }, [
+    h("div", { class: "mobile-menu-panel-header" }, [
+      h("div", { class: "flex items-center gap-3 min-w-0" }, [
+        h("img", { src: "./assets/beyim-studio-ai-mark.png", alt: "", class: "w-10 h-10 object-contain shrink-0" }),
+        h("span", { class: "text-sm font-semibold text-ink truncate" }, t("appName")),
+      ]),
+      closeButton,
+    ]),
+    h("nav", { class: "mobile-menu-list", "aria-label": t("navPrimary") }, items),
+    h("div", { class: "mobile-menu-footer" }, [renderThemeToggle("", "mobile-menu-item theme-toggle pressable")]),
+  ]);
+  const backdrop = h("button", { type: "button", class: "mobile-menu-backdrop", "aria-label": t("navClose") });
+  const overlay = h("div", { class: "mobile-menu-overlay md:hidden fixed inset-0 z-40", "aria-hidden": "true" }, [backdrop, panel]);
+  let previousBodyOverflow = "";
+
+  function handleRouteChange() {
+    closeMenu(false);
   }
-  return nav;
+
+  function handleViewportChange() {
+    if (window.innerWidth >= 768) closeMenu(false);
+  }
+
+  function closeMenu(returnFocus = true) {
+    if (!overlay.classList.contains("is-open")) return;
+    overlay.classList.remove("is-open");
+    overlay.setAttribute("aria-hidden", "true");
+    menuButton.setAttribute("aria-expanded", "false");
+    document.body.style.overflow = previousBodyOverflow;
+    window.removeEventListener("hashchange", handleRouteChange);
+    window.removeEventListener("resize", handleViewportChange);
+    if (returnFocus) menuButton.focus();
+  }
+
+  function openMenu() {
+    previousBodyOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    overlay.classList.add("is-open");
+    overlay.setAttribute("aria-hidden", "false");
+    menuButton.setAttribute("aria-expanded", "true");
+    window.addEventListener("hashchange", handleRouteChange);
+    window.addEventListener("resize", handleViewportChange);
+    closeButton.focus();
+  }
+
+  menuButton.addEventListener("click", openMenu);
+  closeButton.addEventListener("click", () => closeMenu());
+  backdrop.addEventListener("click", () => closeMenu());
+  overlay.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      closeMenu();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const focusable = Array.from(panel.querySelectorAll("button:not([disabled]), [href], [tabindex]:not([tabindex='-1'])"));
+    const first = focusable[0];
+    const last = focusable[focusable.length - 1];
+    if (event.shiftKey && document.activeElement === first) {
+      event.preventDefault();
+      last?.focus();
+    } else if (!event.shiftKey && document.activeElement === last) {
+      event.preventDefault();
+      first?.focus();
+    }
+  });
+
+  const logoButton = h("button", { type: "button", class: "mobile-header-logo pressable", "aria-label": t("navHome") }, [
+    h("img", { src: "./assets/beyim-studio-ai-mark.png", alt: "", class: "w-10 h-10 object-contain shrink-0" }),
+    h("span", { class: "text-sm font-semibold text-ink truncate" }, t("appName")),
+  ]);
+  logoButton.addEventListener("click", () => navigate("/"));
+
+  const header = h("header", { class: "mobile-app-header md:hidden fixed top-0 inset-x-0 z-30" }, [logoButton, menuButton]);
+  return h("div", { class: "mobile-navigation md:hidden" }, [header, overlay]);
 }
