@@ -307,13 +307,6 @@
 .ambient-home .text-ink { color: var(--ambient-text) !important; }
 .ambient-home .text-muted { color: var(--ambient-muted) !important; }
 
-/* The rail stays anchored to the viewport edge; only its exposed upper and
-   lower corners turn into the content area. */
-.app-sidebar {
-  overflow: hidden;
-  border-radius: 0 16px 16px 0;
-}
-
 .home-lovable-hero {
   min-height: calc(100vh - 12px);
   margin: 12px 12px 0;
@@ -540,6 +533,19 @@
   backdrop-filter: none;
   padding-top: 20px;
   padding-bottom: 16px;
+}
+
+/* Keep the rail inset vertically so both rounded ends remain visible. The
+   directional ambient shadow replaces the old right border as its one depth
+   signal and stays restrained enough not to compete with the workspace. */
+.app-sidebar,
+.source-replica-shell > .app-sidebar {
+  top: 12px;
+  height: calc(100vh - 24px);
+  margin-block: 12px;
+  overflow: hidden;
+  border-radius: 0 16px 16px 0;
+  box-shadow: 8px 14px 32px -16px var(--ambient-shadow);
 }
 
 .source-replica-shell > aside nav { padding-inline: 10px; }

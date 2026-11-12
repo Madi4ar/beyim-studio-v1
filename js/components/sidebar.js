@@ -89,7 +89,7 @@ export function renderSidebar(options = {}) {
   ]);
   logo.addEventListener("click", () => navigate("/"));
 
-  return h("aside", { class: "app-sidebar hidden md:flex w-20 shrink-0 chrome-surface border-r border-line flex-col items-center py-3 gap-1 h-screen sticky top-0 z-20" }, [
+  return h("aside", { class: "app-sidebar hidden md:flex w-20 shrink-0 chrome-surface flex-col items-center py-3 gap-1 h-screen sticky top-0 z-20" }, [
     logo,
     h("nav", { class: "flex flex-col gap-1 w-full px-1.5" }, items),
     renderThemeToggle(),
