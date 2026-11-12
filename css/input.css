@@ -717,66 +717,64 @@
 
 /* System dark theme. The same semantic ambient tokens are remapped rather
    than mechanically inverting the light composition. */
-@media (prefers-color-scheme: dark) {
-  body {
-    color: var(--ambient-text);
-    background: var(--ambient-canvas);
-  }
-  .source-replica-shell {
-    --source-bg: #06161d;
-    --source-surface: #0b232c;
-    --source-ink: #f1fafa;
-    --source-soft: #aac4c6;
-    --source-faint: #7f9da0;
-    --source-border: rgba(96,225,210,0.16);
-    --source-border-strong: rgba(96,225,210,0.28);
-    --source-brand: #60e1d2;
-    --source-brand-dark: #8ceadd;
-    --source-brand-deep: #20c5be;
-    --source-brand-soft: rgba(32,197,190,0.13);
-  }
-  .source-replica-shell > aside {
-    background: rgba(6,22,29,0.9);
-    border-color: var(--source-border);
-  }
-  .source-replica-shell .text-ink { color: var(--source-ink); }
-  .source-replica-shell .text-muted { color: var(--source-soft); }
-  .source-replica-shell .text-brand-dark { color: var(--source-brand-dark); }
-  .source-replica-shell .bg-white { background-color: var(--source-surface); }
-  .source-replica-shell .border-line { border-color: var(--source-border); }
-  .source-replica-shell .card { background-color: var(--source-surface); }
-  .source-replica-shell .input {
-    color: var(--source-ink);
-    background-color: #0d2932;
-    border-color: var(--source-border);
-  }
-  .source-replica-shell .input::placeholder { color: var(--source-soft); }
+:root[data-theme="dark"] body {
+  color: var(--ambient-text);
+  background: var(--ambient-canvas);
+}
+:root[data-theme="dark"] .source-replica-shell {
+  --source-bg: #06161d;
+  --source-surface: #0b232c;
+  --source-ink: #f1fafa;
+  --source-soft: #aac4c6;
+  --source-faint: #7f9da0;
+  --source-border: rgba(96,225,210,0.16);
+  --source-border-strong: rgba(96,225,210,0.28);
+  --source-brand: #60e1d2;
+  --source-brand-dark: #8ceadd;
+  --source-brand-deep: #20c5be;
+  --source-brand-soft: rgba(32,197,190,0.13);
+}
+:root[data-theme="dark"] .source-replica-shell > aside {
+  background: rgba(6,22,29,0.9);
+  border-color: var(--source-border);
+}
+:root[data-theme="dark"] .source-replica-shell .text-ink { color: var(--source-ink); }
+:root[data-theme="dark"] .source-replica-shell .text-muted { color: var(--source-soft); }
+:root[data-theme="dark"] .source-replica-shell .text-brand-dark { color: var(--source-brand-dark); }
+:root[data-theme="dark"] .source-replica-shell .bg-white { background-color: var(--source-surface); }
+:root[data-theme="dark"] .source-replica-shell .border-line { border-color: var(--source-border); }
+:root[data-theme="dark"] .source-replica-shell .card { background-color: var(--source-surface); }
+:root[data-theme="dark"] .source-replica-shell .input {
+  color: var(--source-ink);
+  background-color: #0d2932;
+  border-color: var(--source-border);
+}
+:root[data-theme="dark"] .source-replica-shell .input::placeholder { color: var(--source-soft); }
 
-  .home-lovable-hero {
-    background-color: #071b23;
-    background:
-      radial-gradient(92% 94% at 4% 4%, color-mix(in srgb, var(--ambient-aqua) 31%, transparent) 0%, transparent 64%),
-      radial-gradient(82% 92% at 96% 8%, color-mix(in srgb, var(--ambient-blue) 28%, transparent) 0%, transparent 66%),
-      radial-gradient(86% 92% at 84% 92%, color-mix(in srgb, var(--ambient-violet) 25%, transparent) 0%, transparent 68%),
-      radial-gradient(94% 96% at 8% 94%, color-mix(in srgb, var(--ambient-brand) 29%, transparent) 0%, transparent 66%),
-      linear-gradient(145deg, #071b23 0%, #0a252d 50%, #0b1d2c 100%);
-    box-shadow: inset 0 1px 0 rgba(96,225,210,0.13);
-  }
-  .ambient-home .sheet-surface { border-top-color: rgba(255,255,255,0.12); }
-  .ambient-home .icon-tile,
-  .ambient-generation .icon-tile {
-    color: var(--ambient-mint);
-    background: rgba(32,197,190,0.12);
-    --tw-ring-color: rgba(96,225,210,0.18);
-  }
-  .ambient-generator .bg-white { background-color: var(--ambient-surface-strong); }
-  .ambient-generator .hover\:bg-bg:hover { background-color: rgba(96,225,210,0.1); }
-  .ambient-generation-side {
-    color: var(--ambient-text);
-    background: rgba(7,25,33,0.94) !important;
-    border-color: var(--ambient-line) !important;
-  }
-  .generation-thinking-card {
-    background: linear-gradient(145deg, rgba(13,41,50,0.96), rgba(10,34,43,0.94)) !important;
-  }
+:root[data-theme="dark"] .home-lovable-hero {
+  background-color: #071b23;
+  background:
+    radial-gradient(92% 94% at 4% 4%, color-mix(in srgb, var(--ambient-aqua) 31%, transparent) 0%, transparent 64%),
+    radial-gradient(82% 92% at 96% 8%, color-mix(in srgb, var(--ambient-blue) 28%, transparent) 0%, transparent 66%),
+    radial-gradient(86% 92% at 84% 92%, color-mix(in srgb, var(--ambient-violet) 25%, transparent) 0%, transparent 68%),
+    radial-gradient(94% 96% at 8% 94%, color-mix(in srgb, var(--ambient-brand) 29%, transparent) 0%, transparent 66%),
+    linear-gradient(145deg, #071b23 0%, #0a252d 50%, #0b1d2c 100%);
+  box-shadow: inset 0 1px 0 rgba(96,225,210,0.13);
+}
+:root[data-theme="dark"] .ambient-home .sheet-surface { border-top-color: rgba(255,255,255,0.12); }
+:root[data-theme="dark"] .ambient-home .icon-tile,
+:root[data-theme="dark"] .ambient-generation .icon-tile {
+  color: var(--ambient-mint);
+  background: rgba(32,197,190,0.12);
+  --tw-ring-color: rgba(96,225,210,0.18);
+}
+:root[data-theme="dark"] .ambient-generator .bg-white { background-color: var(--ambient-surface-strong); }
+:root[data-theme="dark"] .ambient-generator .hover\:bg-bg:hover { background-color: rgba(96,225,210,0.1); }
+:root[data-theme="dark"] .ambient-generation-side {
+  color: var(--ambient-text);
+  background: rgba(7,25,33,0.94) !important;
+  border-color: var(--ambient-line) !important;
+}
+:root[data-theme="dark"] .generation-thinking-card {
+  background: linear-gradient(145deg, rgba(13,41,50,0.96), rgba(10,34,43,0.94)) !important;
 }

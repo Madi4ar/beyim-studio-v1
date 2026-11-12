@@ -181,6 +181,7 @@ Two radius steps: `0.75rem` (12px) on controls — buttons, inputs, chips' recta
 
 ### Navigation
 - **Style:** icon + label, 11px functional text, instant press feedback. The desktop rail is white; inactive items use muted ink, while the active item receives a brand-soft field and brand-dark foreground.
+- **Theme control:** a persistent Dark/Light toggle sits above the profile at the bottom of the rail, applies the theme immediately, and remembers the choice locally.
 
 ### Glass Surfaces (signature component)
 Three tiers — `glass-surface` (light, small floating elements), `chrome-surface` (heavy, structural chrome), `sheet-surface` (medium-heavy, the modal/bottom sheet) — share one mechanism: `backdrop-filter: blur()` + `backdrop-saturate` over a translucent white fill, a bright `border-top` catching light at the pane's top edge, and the `glass`/`glass-sm` shadow tokens for lift. Under `prefers-reduced-transparency` or `prefers-contrast: more`, all three fall back to solid white with no blur — the material degrades to a plain surface, never to nothing.

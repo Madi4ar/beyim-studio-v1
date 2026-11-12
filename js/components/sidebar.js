@@ -3,6 +3,7 @@
 import { h, icon } from "../utils/dom.js";
 import { t } from "../utils/i18n.js";
 import { navigate, currentPath } from "../router.js";
+import { getTheme, toggleTheme } from "../utils/theme.js";
 
 const NAV_ITEMS = [
   { path: "/", icon: "home2", key: "navHome" },
@@ -14,6 +15,24 @@ const NAV_ITEMS = [
   { path: "/analytics", icon: "chart", key: "navAnalytics" },
   { path: "/settings", icon: "settings", key: "navSettings" },
 ];
+
+function renderThemeToggle(labelClass = "") {
+  const iconWrap = h("span");
+  const label = h("span", { class: `${labelClass} text-center leading-tight`.trim() });
+  const button = h("button", { type: "button", class: "theme-toggle nav-item", "aria-label": "Переключить цветовую тему" }, [iconWrap, label]);
+
+  function refresh(theme = getTheme()) {
+    const dark = theme === "dark";
+    iconWrap.innerHTML = icon(dark ? "sun" : "moon", "w-5 h-5");
+    label.textContent = dark ? "Light" : "Dark";
+    button.title = dark ? "Включить светлую тему" : "Включить тёмную тему";
+    button.setAttribute("aria-pressed", String(dark));
+  }
+
+  button.addEventListener("click", () => refresh(toggleTheme()));
+  refresh();
+  return button;
+}
 
 export function renderSidebar(options = {}) {
   const path = currentPath();
@@ -49,6 +68,7 @@ export function renderSidebar(options = {}) {
     return h("aside", { class: "source-sidebar flex shrink-0 flex-col items-center h-screen sticky top-0 z-20" }, [
       sourceLogo,
       h("nav", { class: "flex flex-col gap-1 flex-1" }, sourceItems),
+      renderThemeToggle("source-nav-label"),
       profile,
     ]);
   }
@@ -72,6 +92,7 @@ export function renderSidebar(options = {}) {
   return h("aside", { class: "hidden md:flex w-20 shrink-0 chrome-surface border-r border-line flex-col items-center py-3 gap-1 h-screen sticky top-0 z-20" }, [
     logo,
     h("nav", { class: "flex flex-col gap-1 w-full px-1.5" }, items),
+    renderThemeToggle(),
   ]);
 }
 

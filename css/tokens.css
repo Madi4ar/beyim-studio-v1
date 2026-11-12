@@ -46,3 +46,14 @@
   --ambient-line: rgba(96,225,210,0.18);
   --ambient-shadow: rgba(0,0,0,0.46);
 }
+
+:root[data-theme="light"] {
+  color-scheme: light;
+  --ambient-canvas: #F7FBFB;
+  --ambient-surface: rgba(255,255,255,0.82);
+  --ambient-surface-strong: rgba(255,255,255,0.94);
+  --ambient-text: #102B2D;
+  --ambient-muted: #4F6668;
+  --ambient-line: rgba(13,115,119,0.14);
+  --ambient-shadow: rgba(13,115,119,0.24);
+}

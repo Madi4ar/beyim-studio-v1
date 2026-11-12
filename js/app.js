@@ -14,7 +14,9 @@ import { renderLibrary } from "./views/library.js";
 import { renderLessonSelect, renderLessonMode } from "./views/lessonMode.js";
 import { renderAnalytics } from "./views/analytics.js";
 import { renderSettings } from "./views/settings.js";
+import { initTheme } from "./utils/theme.js";
 
+initTheme();
 const root = document.getElementById("app");
 
 registerRoute("/", () => renderHome(root));
