@@ -128,7 +128,7 @@ export function renderHome(root) {
       ),
   ]);
 
-  const hero = h("section", { class: "home-lovable-hero relative isolate min-h-screen w-full overflow-hidden px-5 py-16 flex items-center justify-center text-center" }, [
+  const hero = h("section", { class: "home-lovable-hero relative isolate overflow-hidden px-5 py-16 flex items-center justify-center text-center" }, [
     h("div", { class: "relative z-10 w-full max-w-3xl flex flex-col items-center gap-8 md:gap-10" }, [
       renderTypewriterHeading("Что будем создавать сегодня?"),
       heroCard,
