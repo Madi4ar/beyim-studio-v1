@@ -5,6 +5,7 @@
 const dict = {
   ru: {
     appName: "Beyim Studio",
+    navPrimary: "Основная навигация",
     navHome: "Главная",
     navCreate: "AI Create",
     navMaterials: "Материалы",
@@ -48,6 +49,7 @@ const dict = {
   },
   kz: {
     appName: "Beyim Studio",
+    navPrimary: "Негізгі навигация",
     navHome: "Басты бет",
     navCreate: "AI Create",
     navMaterials: "Материалдар",

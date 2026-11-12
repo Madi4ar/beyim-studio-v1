@@ -120,7 +120,7 @@ export function renderLessonMode(root, params = {}) {
   exit.addEventListener("click", () => { clearInterval(interval); navigate(`/dashboard/${project.id}`); });
 
   const content = h("div", { class: "source-page flex-1 min-w-0 flex flex-col min-h-screen bg-[#f4f5f7]" }, [
-    h("header", { class: "flex items-center justify-between px-4 md:px-6 py-3 border-b border-line chrome-surface sticky top-0 z-10 gap-2" }, [
+    h("header", { class: "lesson-mode-header flex items-center justify-between px-4 md:px-6 py-3 border-b border-line chrome-surface sticky top-0 z-10 gap-2" }, [
       exit,
       h("div", { class: "text-[13px] source-soft truncate text-center" }, `${project.topic}, ${project.grade} класс`),
       h("div", { class: "flex items-center gap-2 shrink-0" }, [h("span", { class: "source-soft", html: icon("timer", "w-4 h-4") }), timerText, timerButton]),

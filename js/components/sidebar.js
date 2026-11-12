@@ -65,7 +65,7 @@ export function renderSidebar(options = {}) {
       h("img", { src: "./assets/beyim-studio-ai-mark.png", alt: "", class: "w-12 h-12 block object-contain" }),
     ]);
     sourceLogo.addEventListener("click", () => navigate("/"));
-    return h("aside", { class: "app-sidebar source-sidebar flex shrink-0 flex-col items-center h-screen sticky top-0 z-20" }, [
+    return h("aside", { class: "app-sidebar source-sidebar hidden md:flex shrink-0 flex-col items-center h-screen sticky top-0 z-20" }, [
       sourceLogo,
       h("nav", { class: "flex flex-col gap-1 flex-1" }, sourceItems),
       renderThemeToggle("source-nav-label"),
@@ -99,19 +99,34 @@ export function renderSidebar(options = {}) {
 // Bottom tab bar shown on phones/tablets instead of the left rail.
 export function renderMobileNav() {
   const path = currentPath();
-  const base = path.split("/")[1] || "";
+  const routeBase = path.split("/")[1] || "";
+  const base = routeBase === "lesson" ? "teach" : routeBase;
+  let activeItem = null;
 
   const items = NAV_ITEMS.map((item) => {
     const itemBase = item.path.split("/")[1] || "";
     const active = itemBase === base;
     const el = h(
-      "div",
-      { class: `pressable flex flex-col items-center justify-center gap-0.5 py-2 px-3 min-w-[68px] shrink-0 text-[10px] font-medium ${active ? "text-brand" : "text-muted"}` },
+      "button",
+      {
+        type: "button",
+        class: `pressable flex flex-col items-center justify-center gap-0.5 py-2 px-3 min-w-[68px] min-h-[52px] shrink-0 text-[10px] font-medium ${active ? "text-brand" : "text-muted"}`,
+        "aria-current": active ? "page" : null,
+        "aria-label": t(item.key),
+      },
       [h("span", { html: icon(item.icon, "w-5 h-5") }), h("span", { class: "whitespace-nowrap" }, t(item.key))]
     );
+    if (active) activeItem = el;
     el.addEventListener("click", () => navigate(item.path));
     return el;
   });
 
-  return h("nav", { class: "md:hidden fixed bottom-0 inset-x-0 z-30 chrome-surface border-t border-line flex overflow-x-auto scrollbar-thin" }, items);
+  const nav = h("nav", {
+    class: "mobile-bottom-nav md:hidden fixed bottom-0 inset-x-0 z-30 chrome-surface flex overflow-x-auto scrollbar-thin",
+    "aria-label": t("navPrimary"),
+  }, items);
+  if (window.matchMedia("(max-width: 767px)").matches) {
+    requestAnimationFrame(() => activeItem?.scrollIntoView({ block: "nearest", inline: "center" }));
+  }
+  return nav;
 }

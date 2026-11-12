@@ -564,6 +564,29 @@
 .source-replica-shell > aside .nav-item:hover { background: var(--source-bg); color: var(--source-ink); }
 .source-replica-shell > aside .nav-item-active { background: var(--source-brand-soft); color: var(--source-brand-dark); }
 
+.lesson-mode-header {
+  top: 12px;
+  margin: 12px 12px 0;
+  border-radius: 16px;
+}
+
+.mobile-bottom-nav {
+  min-height: calc(60px + env(safe-area-inset-bottom));
+  padding-bottom: env(safe-area-inset-bottom);
+  scroll-padding-inline: 12px;
+  overscroll-behavior-x: contain;
+}
+.app-shell-content {
+  padding-bottom: calc(4rem + env(safe-area-inset-bottom));
+}
+.source-replica-shell > .mobile-bottom-nav {
+  background-color: color-mix(in srgb, var(--source-surface) 88%, transparent);
+  border-top-color: var(--source-border);
+}
+@media (min-width: 768px) {
+  .app-shell-content { padding-bottom: 0; }
+}
+
 .generation-workspace {
   background:
     radial-gradient(70% 56% at 50% 46%, color-mix(in srgb, var(--ambient-mint) 13%, transparent), transparent 72%),
@@ -764,6 +787,10 @@
 :root[data-theme="dark"] .source-replica-shell > aside {
   background: rgba(6,22,29,0.9);
   border-color: var(--source-border);
+}
+:root[data-theme="dark"] .source-replica-shell > .mobile-bottom-nav {
+  background-color: rgba(6,22,29,0.9);
+  border-top-color: var(--source-border);
 }
 :root[data-theme="dark"] .source-replica-shell .text-ink { color: var(--source-ink); }
 :root[data-theme="dark"] .source-replica-shell .text-muted { color: var(--source-soft); }
